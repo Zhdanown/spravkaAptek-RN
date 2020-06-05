@@ -7,6 +7,7 @@ import HomeScreen from './views/HomeScreen';
 import FilterScreen from './views/FilterScreen';
 import Scrollable from './views/ScrollableScreen';
 import SearchHeader from './views/HomeScreen/SearchHeader';
+import RealmTest from "./views/Realm";
 
 const Stack = createStackNavigator();
 
@@ -31,6 +32,10 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
+        <Stack.Screen 
+          name="RealmTest"
+          component={RealmTest}
+        />
         <Stack.Screen
           name="Home"
           component={HomeScreen}
