@@ -1,3 +1,41 @@
+export const pharmacies = [
+  {
+    id: 1,
+    name: "Аптека 'Таблеточка'",
+    address: 'Курск, Центральный округ, ул. Садовая 10',
+    isOpenNow: true,
+    latitude: 51.749103,
+    longitude: 36.226869,
+    phone: 89655467856,
+    schedule: "пн-вс, с 7:30 до 19:00",
+    photos: []
+  },
+  {
+    id: 2,
+    name: "Аптека M+",
+    address: 'Курск, СХА, Пр-т Победы 14',
+    isOpenNow: true,
+    latitude: "51.67207600",
+    longitude: "36.14014000",
+    phone: 89655467856,
+    schedule: "пн-вс, с 7:30 до 19:00",
+    photos: []
+  },
+  {
+    id: 3,
+    name: 'Аптека М- ',
+    address: 'Курск, СХА, Пр-т Победы 14',
+    isOpenNow: true,
+    // latitude: 51.749103,
+    // longitude: 36.226869,
+    latitude: null,
+    longitude: null,
+    phone: 89655467856,
+    schedule: "пн-вс, с 7:30 до 19:00",
+    photos: []
+  }
+]
+
 export default [
   {
     id: '1',
@@ -21,7 +59,7 @@ export default [
     quantity: 4,
     price: 129.14,
     pharmacy: {
-      id: 1,
+      id: 2,
       name: 'Аптека М+ ',
       address: 'Курск, СХА, Пр-т Победы 14',
       isOpenNow: false,
@@ -36,7 +74,7 @@ export default [
     quantity: 13,
     price: 129.14,
     pharmacy: {
-      id: 1,
+      id: 3,
       name: 'Аптека М- ',
       address: 'Курск, СХА, Пр-т Победы 14',
       isOpenNow: false,
@@ -51,7 +89,7 @@ export default [
     quantity: 6,
     price: 129.14,
     pharmacy: {
-      id: 1,
+      id: 4,
       name: 'Аптека М= ',
       address: 'Курск, СХА, Пр-т Победы 14',
       isOpenNow: false,

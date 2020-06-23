@@ -1,24 +1,28 @@
 import 'react-native-gesture-handler';
 import React from 'react';
-import {View} from 'react-native';
+import {View, Button, Text} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import HomeScreen from './views/HomeScreen';
 import FilterScreen from './views/FilterScreen';
-import Scrollable from './views/ScrollableScreen';
+// import Scrollable from './views/ScrollableScreen';
+import Pharmacy from "./views/Pharmacy";
 import SearchHeader from './views/HomeScreen/SearchHeader';
+import BorderlessButton from "./components/BorderlessButton";
 
 const Stack = createStackNavigator();
 
 function ClearFilterButton({clearFilters}) {
   return (
     <View style={{marginRight: 10}}>
-      <Button
+      <BorderlessButton  onPress={() => console.log('sdf')} text="Очистить" />
+      
+      {/* <Button
         onPress={clearFilters}
         title="Очистить"
-        color="steelblue"
+        color="transparent"
         accessibilityLabel="Применить выбранные фильтры"
-      />
+      /> */}
     </View>
   );
 }
@@ -49,10 +53,10 @@ function App() {
           }}
         />
         <Stack.Screen
-          name="Scrollable"
-          component={Scrollable}
+          name="Pharmacy"
+          component={Pharmacy}
           options={{
-            headerShown: false,
+            // headerShown: false,
           }}
         />
       </Stack.Navigator>

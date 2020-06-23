@@ -101,7 +101,7 @@ const FilterScreen = () => {
               value={range}
               onValueChange={onSliderRangeChange}
               // onSlidingComplete={onRangeSet}
-              style={{width: 200, height: 40}}
+              style={{width: 150, height: 40}}
               minimumValue={1}
               maximumValue={30}
               step={1}
@@ -136,12 +136,15 @@ const styles = StyleSheet.create({
   },
   item: {
     paddingHorizontal: 15,
-    paddingVertical: 20,
-    marginBottom: 10,
+    paddingVertical: 25,
+    // marginBottom: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#dedede',
+    // backgroundColor: '#dedede',
+    borderColor: '#dedede',
+    borderBottomWidth: 1,
+
     // backgroundColor: '#fff',
   },
   itemLabel: {
