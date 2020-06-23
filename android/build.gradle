@@ -36,3 +36,16 @@ allprojects {
         maven { url 'https://www.jitpack.io' }
     }
 }
+
+// This block encapsulates custom properties and makes them available to all
+// modules in the project.
+ext {
+
+    playServicesVersion = "17.0.0" // or find latest version
+    androidMapsUtilsVersion = "0.5+"
+
+    // The following are only a few examples of the types of properties you can define.
+    compileSdkVersion = 28
+    supportLibVersion = "28.0.0"
+    
+}

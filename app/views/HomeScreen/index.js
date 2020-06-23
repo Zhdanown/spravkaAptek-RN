@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, RefreshControl, FlatList} from 'react-native';
 import ItemCard from './ItemCard';
-import data from "../../assets/data"
+import data from '../../assets/data';
 
 export default function HomeScreen({navigation}) {
   const [results, setResults] = React.useState([]);
@@ -24,7 +24,14 @@ export default function HomeScreen({navigation}) {
   return (
     <FlatList
       data={results}
-      renderItem={({item}) => <ItemCard item={item} />}
+      renderItem={({item}) => (
+        <ItemCard
+          item={item}
+          onOpen={() =>
+            navigation.navigate('Pharmacy', {pharmacyId: item.pharmacy.id})
+          }
+        />
+      )}
       keyExtractor={item => item.id}
       refreshControl={
         <RefreshControl
