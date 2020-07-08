@@ -9,12 +9,15 @@ import {
   TouchableWithoutFeedback,
   Switch,
 } from 'react-native';
+import {connect} from "react-redux";
 import Picker from '../../components/Picker';
 import Slider from '@react-native-community/slider';
 
 // function
 
-const FilterScreen = () => {
+const FilterScreen = ({filter}) => {
+  console.log(filter)
+  
   const [value, onChangeText] = useState('');
   const [isEnabled, setIsEnabled] = useState(false);
   const [range, setRange] = useState(9)  
@@ -64,6 +67,9 @@ const FilterScreen = () => {
       <View style={styles.container}>
         {/* Filter items */}
         <ScrollView style={styles.items}>
+          <View>
+            <Text>{filter.schedule}</Text>
+          </View>
           {/* Boolean */}
           <View style={styles.item}>
             <Text style={styles.itemLabel}>Отображать закрытые последними</Text>
@@ -125,7 +131,13 @@ const FilterScreen = () => {
   );
 };
 
-export default FilterScreen;
+const mapStateToProps = state => {
+  return {
+    filter: state.filter
+  }
+}
+
+export default connect(mapStateToProps)(FilterScreen);
 
 const styles = StyleSheet.create({
   container: {
