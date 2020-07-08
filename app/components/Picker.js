@@ -17,7 +17,7 @@ const Picker = ({options = [], onChange = () => {}}) => {
       style={{height: 30, width: 200, color: 'steelblue'}}
       onValueChange={(itemValue, itemIndex) => setValue(itemValue)}>
       {options.map(option => (
-        <_Picker.Item label={option.label} value={option.value} />
+        <_Picker.Item key={option.id} label={option.label} value={option.value} />
       ))}
     </_Picker>
   );
