@@ -1,6 +1,7 @@
 import React from 'react';
 import {StyleSheet, RefreshControl, FlatList} from 'react-native';
 import ItemCard from './ItemCard';
+import SearchHeader from "./SearchHeader"
 import data from '../../assets/data';
 
 export default function HomeScreen({navigation}) {
@@ -22,6 +23,8 @@ export default function HomeScreen({navigation}) {
   }, []);
 
   return (
+    <>
+    <SearchHeader />
     <FlatList
       data={results}
       renderItem={({item}) => (
@@ -41,6 +44,8 @@ export default function HomeScreen({navigation}) {
         />
       }
     />
+    </>
+
   );
 }
 

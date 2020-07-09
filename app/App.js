@@ -2,11 +2,13 @@ import 'react-native-gesture-handler';
 import React from 'react';
 
 import {Provider} from 'react-redux';
-import store from "./modules/store";
+import store from './modules/store';
 
 import {View, Button, Text} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
+// import {createStackNavigator} from '@react-navigation/stack';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+
 import HomeScreen from './views/HomeScreen';
 import FilterScreen from './views/FilterScreen';
 // import Scrollable from './views/ScrollableScreen';
@@ -14,9 +16,10 @@ import Pharmacy from './views/Pharmacy';
 import SearchHeader from './views/HomeScreen/SearchHeader';
 import BorderlessButton from './components/BorderlessButton';
 
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {COLOR_THEME} from './config';
 
-
-const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
 
 function ClearFilterButton({clearFilters}) {
   return (
@@ -41,15 +44,32 @@ function App() {
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen
+        <Tab.Navigator
+          screenOptions={({route}) => ({
+            tabBarIcon: ({focused, color, size}) => {
+              let iconName;
+
+              if (route.name === 'Home') {
+                iconName = focused ? 'home-outline' : 'home';
+              } else if (route.name === 'Filter') {
+                iconName = focused ? 'filter-outline' : 'filter';
+              }
+
+              return <Icon name={iconName} size={size} color={color} />;
+            },
+          })}
+          tabBarOptions={{
+            activeTintColor: COLOR_THEME.PRIMARY,
+            inactiveTintColor: 'gray',
+          }}>
+          <Tab.Screen
             name="Home"
             component={HomeScreen}
             options={{
               header: props => <SearchHeader />,
             }}
           />
-          <Stack.Screen
+          <Tab.Screen
             name="Filter"
             component={FilterScreen}
             options={{
@@ -59,7 +79,7 @@ function App() {
               ),
             }}
           />
-          <Stack.Screen
+          {/* <Tab.Screen
             name="Pharmacy"
             component={Pharmacy}
             options={
@@ -67,8 +87,8 @@ function App() {
                 // headerShown: false,
               }
             }
-          />
-        </Stack.Navigator>
+          /> */}
+        </Tab.Navigator>
       </NavigationContainer>
     </Provider>
   );
