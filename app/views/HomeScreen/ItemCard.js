@@ -1,83 +1,107 @@
 import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {COLORS} from '../../config';
 
-const ItemCard = ({item, onOpen}) => {
-  return (
-    <TouchableOpacity onPress={onOpen}>
-      <View style={styles.item}>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'flex-start',
-            justifyContent: 'space-between',
-          }}>
-          <Text style={styles.pharmacyName}>{item.pharmacy.name}</Text>
-          <Text
-            style={
-              (styles.isPharmacyOpen,
-              {color: item.pharmacy.isOpenNow ? 'green' : 'firebrick'})
-            }>
-            {item.pharmacy.isOpenNow ? 'Открыто' : 'Закрыто'}
-          </Text>
-        </View>
-        <Text style={styles.itemName}>{item.name}</Text>
+class ItemCard extends React.PureComponent {
 
-        <View
-          style={{flexDirection: 'row', marginVertical: 10, flexWrap: 'wrap'}}>
-          {/* price, quantity, status */}
-          <View style={{padding: 0}}>
-            <Text style={styles.itemQuantity}>
-              В наличии: <Text style={styles.highlighted}>{item.quantity}</Text>
+  render() {
+    const {
+      name,
+      price,
+      quantity,
+      distance,
+      price_list: {
+        pharmacy,
+        pharmacy: {short_address: address, is_work_now: isOpenNow},
+      },
+    } = this.props.item;
+
+    return (
+      <TouchableOpacity onPress={this.props.onOpen}>
+        <View style={styles.item}>
+          <Text style={styles.itemName}>{name}</Text>
+          <View style={styles.justified}>
+            <Text style={styles.pharmacyName}>{pharmacy.name}</Text>
+            <Text
+              style={
+                (styles.isPharmacyOpen,
+                {color: isOpenNow ? 'green' : 'firebrick'})
+              }>
+              {isOpenNow ? 'Открыто' : 'Закрыто'}
             </Text>
-            <Text style={styles.itemPrice}>
-              по <Text style={styles.highlighted}>{item.price} &#8381;</Text>
-            </Text>
-
-            <Text>{item.date}</Text>
           </View>
+
           {/* address and distance */}
-          <View style={{flex: 1, paddingLeft: 15}}>
-            <Text style={styles.pharmacyAddress}>{item.pharmacy.address}</Text>
+          <View style={styles.addressDistance}>
             <Text style={styles.itemDistance}>
               <Icon name="map-marker-outline" size={15} />
-              {item.distance}км
+              {}
+              {distance ? distance + 'км' : 'н/д'}
             </Text>
+            <Text style={styles.pharmacyAddress}>{address}</Text>
+          </View>
+
+          {/* price, quantity, status */}
+          <View style={[styles.justified, styles.quantityPrice]}>
+            <Text style={[styles.itemQuantity, styles.highlighted]}>
+              В наличии <Text style={styles.highlighted}>{quantity}</Text> шт
+            </Text>
+            <Text style={[styles.itemPrice, styles.highlighted]}>
+              по <Text style={styles.highlighted}>{price} &#8381;</Text>
+            </Text>
+
           </View>
         </View>
-      </View>
-    </TouchableOpacity>
-  );
-};
+        {/* </View> */}
+      </TouchableOpacity>
+    );
+  }
+}
 
 export default ItemCard;
 
 const styles = StyleSheet.create({
   item: {
-    backgroundColor: '#fff',
     padding: 10,
-    marginBottom: 10,
-    // borderWidth: 1,
-    // borderColor: 'steelblue'
+    paddingVertical: 15,
   },
-  itemName: {},
+  justified: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+  },
+  itemName: {
+    fontSize: 16,
+    fontWeight: '900',
+    marginBottom: 10,
+  },
   pharmacyName: {
     flex: 1,
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: '900',
-    color: 'steelblue',
+    color: COLORS.FADED,
   },
   pharmacyAddress: {
-    color: '#666',
+    color: COLORS.FADED,
   },
   isPharmacyOpen: {},
+  quantityPrice: {
+    marginTop: 10,
+  },
+  itemQuantity: {
+    marginRight: 10,
+  },
   itemPrice: {},
-  itemQuantity: {},
+  addressDistance: {
+    flexDirection: 'row',
+  },
   itemDistance: {
-    color: '#666',
+    color: COLORS.FADED,
+    marginRight: 10,
+    fontWeight: 'bold',
   },
   highlighted: {
-    color: 'steelblue',
     fontWeight: 'bold',
   },
 });

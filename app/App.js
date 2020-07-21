@@ -10,14 +10,15 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 import HomeScreen from './views/HomeScreen';
-import FilterScreen from './views/FilterScreen';
+import PharmaciesScreen from './views/PharmaciesScreen';
+import ReferenceScreen from "./views/ReferenceScreen";
 // import Scrollable from './views/ScrollableScreen';
-import Pharmacy from './views/Pharmacy';
+// import Pharmacy from './views/Pharmacy';
 import SearchHeader from './views/HomeScreen/SearchHeader';
 import BorderlessButton from './components/BorderlessButton';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {COLOR_THEME} from './config';
+import {COLORS} from './config';
 
 const Tab = createBottomTabNavigator();
 
@@ -50,35 +51,51 @@ function App() {
               let iconName;
 
               if (route.name === 'Home') {
-                iconName = focused ? 'home-outline' : 'home';
+                iconName = 'magnify';
               } else if (route.name === 'Filter') {
-                iconName = focused ? 'filter-outline' : 'filter';
+                iconName = 'filter';
+              } else if (route.name === 'Pharmacies') {
+                iconName = 'store';
+              } else if ("Reference") {
+                iconName = 'book-open'
               }
 
               return <Icon name={iconName} size={size} color={color} />;
             },
           })}
           tabBarOptions={{
-            activeTintColor: COLOR_THEME.PRIMARY,
+            activeTintColor: COLORS.PRIMARY,
             inactiveTintColor: 'gray',
           }}>
           <Tab.Screen
             name="Home"
             component={HomeScreen}
             options={{
-              header: props => <SearchHeader />,
+              title: 'Поиск',
+              // header: props => <SearchHeader />,
             }}
           />
           <Tab.Screen
-            name="Filter"
-            component={FilterScreen}
+            name="Pharmacies"
+            component={PharmaciesScreen}
             options={{
-              title: 'Фильтры',
+              title: 'Аптеки',
               headerRight: props => (
                 <ClearFilterButton clearFilters={clearFilters} />
-              ),
+                ),
+              }}
+          />
+          <Tab.Screen
+            name="Reference"
+            component={ReferenceScreen}
+            options={{
+              title: 'Справочник',
+              // headerRight: props => (
+              //   <ClearFilterButton clearFilters={clearFilters} />
+              // ),
             }}
           />
+          
           {/* <Tab.Screen
             name="Pharmacy"
             component={Pharmacy}
