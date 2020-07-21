@@ -1,7 +1,5 @@
 import api from "../../services/api";
 
-import {v4 as uuidv4} from "uuid";
-
 const SET_SEARCH_PHARM = 'search/SELECT_PHARM';
 const FETCH_SEARCH_ITEMS = 'search/FETCH_ITEMS';
 const IS_LOADING_ITEMS = 'search/IS_LOADING_ITEMS';
@@ -79,8 +77,6 @@ export const searchResults = value => async (dispatch, getState) => {
     }
   });
 
-  response.data.results = response.data.results.map(x => ({...x, id: uuidv4()}))
-
   dispatch({type: FETCH_SEARCH_ITEMS, payload: { ...response.data, value} });
 }
 
@@ -91,8 +87,6 @@ export const loadNextPage = () => async (dispatch, getState) => {
   dispatch({ type: IS_LOADING_NEXT_PAGE, isLoading: true });
 
   const response = await api.get(nextPageURL);
-
-  response.data.results = response.data.results.map(x => ({...x, id: uuidv4()}))
 
   dispatch({ type: LOAD_NEXT_PAGE, payload: response.data })
 }
