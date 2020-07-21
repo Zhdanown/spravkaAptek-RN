@@ -2,127 +2,78 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {clearSearchPharm, searchResults} from '../../modules/search';
 
-import {View, Animated} from 'react-native';
+import {View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {SearchBar} from 'react-native-elements';
-import Icon from 'react-native-vector-icons/AntDesign';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import IconButton from '../../components/IconButton';
 import SelectedPharmSearch from './SelectedPharmSearch';
 import { COLORS } from '../../config';
 
-const INPUT_OFFSET = 50;
-const FILTER_OFFSET = 50;
-const SPEED = 400;
-
-const SearchHeader = ({selectedPharm, clearSearchPharm, searchResults, fetchedItems}) => {
+const SearchHeader = ({selectedPharm, clearSearchPharm, searchResults}) => {
   const navigation = useNavigation();
 
   const [searchValue, setSearchValue] = React.useState('');
 
-  const updateSearchResults = value => {
-    setSearchValue(value);
-    if (value.length > 2) {
-      searchResults(value)
-    }
-  };
-
-  const [inputOffset] = React.useState(new Animated.Value(0));
-  const [filterOffset] = React.useState(new Animated.Value(-FILTER_OFFSET));
-
- 
-
-  React.useEffect(() => {
-    if (fetchedItems.length) inputMargin('collapse');
-    else inputMargin('expand');
-  }, [fetchedItems]);
-
-  const inputMargin = type => {
-    // TODO must depend on results count
-    if (type == 'collapse') {
-      Animated.timing(inputOffset, {
-        toValue: INPUT_OFFSET,
-        duration: SPEED,
-      }).start();
-      Animated.timing(filterOffset, {
-        toValue: 0,
-        duration: SPEED,
-      }).start();
-    } else {
-      Animated.timing(inputOffset, {
-        toValue: 0,
-        duration: SPEED,
-      }).start();
-      Animated.timing(filterOffset, {
-        toValue: -FILTER_OFFSET,
-        duration: SPEED,
-      }).start();
+  const updateSearchResults = () => {
+    console.log(searchValue)
+    if (searchValue.length > 2) {
+      searchResults(searchValue)
     }
   };
 
   function FilterButton() {
-    Animated.createAnimatedComponent();
     return (
-      <Animated.View
+      <View
         style={{
-          position: 'absolute',
-          right: filterOffset,
-          top: 0,
-          padding: 16,
-          // padding: 12,
-          // backgroundColor: 'white',
-          // paddingVertical: 17
+          paddingVertical: 18,
+          paddingHorizontal: 16
         }}>
         <IconButton onPress={() => navigation.navigate('Filter')}>
-          <Icon name="filter" size={30} color='white' />
+          <Icon name="filter-variant" size={30} color='white' />
         </IconButton>
-      </Animated.View>
+      </View>
     );
   }
 
   return (
     <View
       style={{
-        flexDirection: 'row',
         backgroundColor: COLORS.PRIMARY,
         marginTop: -0,
       }}>
-      <Animated.View style={{flex: 1, marginRight: inputOffset}}>
+      <View style={{ flexDirection: 'row' }}>
       
         <SearchBar
           value={searchValue}
-          onChangeText={updateSearchResults}
+          onSubmitEditing={updateSearchResults}
+          onChangeText={setSearchValue}
           placeholder="мин. 3 символа"
           platform="default"
           lightTheme={true}
-          // showLoading={true}
-          // inputStyle={{backgroundColor: 'red'}}
           containerStyle={{
+            flex: 1,
             padding: 10,
+            paddingRight: 0,
             backgroundColor: COLORS.PRIMARY,
             borderBottomWidth: 0,
             borderTopWidth: 0,
           }}
           inputContainerStyle={{
-            // height: 40,
-            // paddingTop: 3,
-            // backgroundColor: 'rgba(32,100,220,.2)',
             backgroundColor: 'white',
-            // borderColor: COLORS.PRIMARY,
-            // borderWidth: 1,
-            // borderBottomWidth: 1,
             borderRadius: 8
           }}
         />
-        {selectedPharm && (
-          <SelectedPharmSearch
-            pharm={selectedPharm}
-            clearPharm={clearSearchPharm}
-          />
-        )}
-      </Animated.View>
+        <FilterButton navigation={navigation} />
+      </View>
 
-      <FilterButton navigation={navigation} />
+      {selectedPharm && (
+        <SelectedPharmSearch
+          pharm={selectedPharm}
+          clearPharm={clearSearchPharm}
+        />
+      )}
     </View>
   );
 };

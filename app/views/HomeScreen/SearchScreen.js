@@ -71,7 +71,7 @@ function SearchScreen({
       {/* <SearchHeader /> */}
       <FlatList
         data={items}
-        keyExtractor={(item, index) => item.id}
+        keyExtractor={(item, index) => index.toString()}
         renderItem={renderItem}
         refreshControl={
           <RefreshControl
@@ -88,7 +88,7 @@ function SearchScreen({
         ListEmptyComponent={
           value && <NoContentFiller text={`По запросу '${value}'\nничего не найдено :(` } />
         }
-        contentContainerStyle={{ flexGrow: 1, margin: 15 }}
+        contentContainerStyle={{ flexGrow: 1, }}
         ListFooterComponent={renderFooter()}
       />
     </>
