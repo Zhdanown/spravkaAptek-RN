@@ -1,52 +1,35 @@
 import React from 'react';
-import {StyleSheet, RefreshControl, FlatList} from 'react-native';
-import ItemCard from './ItemCard';
-import SearchHeader from "./SearchHeader"
-import data from '../../assets/data';
+import {createStackNavigator} from '@react-navigation/stack';
 
-export default function HomeScreen({navigation}) {
-  const [results, setResults] = React.useState([]);
-  const [isRefreshing, setRefreshing] = React.useState(true);
+import SearchScreen from './SearchScreen'
+import FilterScreen from './FilterScreen';
+import PharmacyScreen from "../PharmacyScreen";
+import SearchHeader from './SearchHeader';
 
-  const loadResults = () => {
-    setResults([]);
-    setRefreshing(true);
+const Stack = createStackNavigator();
 
-    setTimeout(() => {
-      setRefreshing(false);
-      setResults(data);
-    }, 3000);
-  };
 
-  React.useEffect(() => {
-    loadResults();
-  }, []);
 
+export default function HomeScreen() {
   return (
-    <>
-    <SearchHeader />
-    <FlatList
-      data={results}
-      renderItem={({item}) => (
-        <ItemCard
-          item={item}
-          onOpen={() =>
-            navigation.navigate('Pharmacy', {pharmacyId: item.pharmacy.id})
-          }
-        />
-      )}
-      keyExtractor={item => item.id}
-      refreshControl={
-        <RefreshControl
-          colors={['steelblue']}
-          refreshing={isRefreshing}
-          onRefresh={loadResults}
-        />
-      }
-    />
-    </>
-
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Search"
+        component={SearchScreen}
+        options={{
+          title: 'Поиск',
+          header: props => <SearchHeader />,
+        }}
+      />
+      <Stack.Screen name="Filter" component={FilterScreen} />
+      <Stack.Screen
+        name="Pharmacy"
+        component={PharmacyScreen}
+        options={
+          ({ route }) => ({ title: route.params.title })
+        }
+      />
+    </Stack.Navigator>
   );
 }
 
-const styles = StyleSheet.create({});

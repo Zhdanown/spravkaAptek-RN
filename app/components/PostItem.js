@@ -1,6 +1,7 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {COLORS} from "../config";
 
 const PostItem = ({navigate, post, user}) => {
   return (
@@ -21,7 +22,7 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: 'white',
     margin: 10,
-    borderTopColor: 'steelblue',
+    borderTopColor: COLORS.PRIMARY,
     borderTopWidth: 3
   },
   user: {

@@ -1,3 +1,19 @@
+export const referenceData = [
+  {
+    id: 1,
+    name: 'ПИХТОВОЕ МАСЛО Д/НАРУЖН. ПРИМ. 15МЛ',
+    country: 'Россия',
+    group: "Гигиена и косметика",
+  },
+  {
+    id: 2,
+    name: 'АЗАЛЕПТИН, Кол-во: №50, Дозировка 100мг',
+    country: 'Россия',
+    group: "Лекарственные препараты",
+    subgroup: 'Нервная система'
+  }
+]
+
 export const pharmacies = [
   {
     id: 1,
@@ -79,7 +95,7 @@ export default [
       address: 'Курск, СХА, Пр-т Победы 14',
       isOpenNow: false,
     },
-    distance: 4.6,
+    // distance: 4.6,
     date: '2 д. назад',
   },
   {

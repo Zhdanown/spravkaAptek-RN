@@ -12,6 +12,7 @@ import {
 import {connect} from "react-redux";
 import Picker from '../../components/Picker';
 import Slider from '@react-native-community/slider';
+import { COLORS } from "../../config";
 
 // function
 
@@ -160,7 +161,7 @@ const styles = StyleSheet.create({
     // backgroundColor: '#fff',
   },
   itemLabel: {
-    color: '#666',
+    color: COLORS.FADED,
   },
   itemValue: {
     color: 'steelblue'

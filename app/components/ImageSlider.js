@@ -1,5 +1,6 @@
 import React from 'react';
 import {SliderBox} from 'react-native-image-slider-box';
+import {COLORS} from "../config"
 
 export default function ImageSlider() {
   const [images, setImages] = React.useState([
@@ -10,5 +11,5 @@ export default function ImageSlider() {
     // require('./assets/images/girl.jpg'),          // Local image
   ]);
 
-  return <SliderBox images={images} dotColor="steelblue" imageLoadingColor="steelblue"/>;
+  return <SliderBox images={images} dotColor={COLORS.PRIMARY} imageLoadingColor={COLORS.PRIMARY}/>;
 }
