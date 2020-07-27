@@ -21,13 +21,13 @@ import ImageSlider from '../../components/ImageSlider';
 import {COLORS} from '../../config';
 import BorderlessButton from '../../components/BorderlessButton';
 
-import {callNumber} from '../../utils';
+import {callNumber, sendEmail} from '../../utils';
 
 function PharmacyScreen({navigation, route, setSearchPharm}) {
-  const {pharmacy} = route.params;
+  const {pharmacy, drug} = route.params;
 
   if (!pharmacy) return <NoContentFiller text="Аптека не найдена" />;
-  
+
   const coordinates = [+pharmacy.latitude, +pharmacy.longitude];
   const {
     name,
@@ -36,120 +36,133 @@ function PharmacyScreen({navigation, route, setSearchPharm}) {
     schedule: {name: schedule},
     contacts,
   } = pharmacy;
-  
+
+  const {drugName, country, price, quantity} = drug;
+
   const windowHeight = useWindowDimensions().height;
-  const MAX_MAP_HEIGHT = windowHeight * 0.5;
-  const MIN_MAP_HEIGHT = windowHeight * 0.3 || 200;
+  const mapHeight = windowHeight * 0.5;
 
-  const mapHeight = MAX_MAP_HEIGHT;
+  const renderDrugInfo = () => {
+    return (
+      <View
+        style={[styles.section, {borderColor: COLORS.PRIMARY, borderWidth: 1}]}>
+        <Text style={{fontSize: 16}}>
+          {drugName} ({country})
+        </Text>
 
-  // const [scrollY, setScrollY] = React.useState(new Animated.Value(0));
+        <View style={[styles.justified, {marginTop: 5}]}>
+          <Text style={styles.bold}>В наличии {quantity} ед</Text>
+          <Text style={styles.bold}>по {price} &#8381;</Text>
+        </View>
+      </View>
+    );
+  };
 
-  // const mapHeight = scrollY.interpolate({
-  //   inputRange: [0, MAX_MAP_HEIGHT - MIN_MAP_HEIGHT, MAX_MAP_HEIGHT - MIN_MAP_HEIGHT],
-  //   outputRange: [MAX_MAP_HEIGHT, MIN_MAP_HEIGHT, MIN_MAP_HEIGHT],
-  //   extrapolate: 'clamp',
-  // });
+  const renderLocation = () => {
+    return (
+      <View style={styles.section}>
+        <Text style={styles.address}>{address}</Text>
+        <View
+          style={[
+            styles.textWithIcon,
+            {marginTop: 10, justifyContent: 'flex-end'},
+          ]}>
+          <Icon name="clock-outline" size={15} color="#666" />
+          <Text style={{marginLeft: 5, color: '#666'}}>
+            Местоположение не определено
+          </Text>
+        </View>
+      </View>
+    );
+  };
 
-  // const infoContentTopOffset = scrollY.interpolate({
-  //   inputRange: [0, MAX_MAP_HEIGHT - MIN_MAP_HEIGHT, MAX_MAP_HEIGHT - MIN_MAP_HEIGHT],
-  //   outputRange: [MAX_MAP_HEIGHT+50, MIN_MAP_HEIGHT * 2, MIN_MAP_HEIGHT * 2],
-  //   extrapolate: 'extend',
-  // });
+  const renderSchedule = () => {
+    return (
+      <View style={[styles.justified, styles.section]}>
+        <View style={{flexDirection: 'column'}}>
+          {schedule
+            .split(';')
+            .map(x => x.trim())
+            .map((scheduleItem, index) => (
+              <View key={index} style={styles.textWithIcon}>
+                <Icon name="clock-outline" size={15} />
+                <Text style={{marginLeft: 5}}>{scheduleItem}</Text>
+              </View>
+            ))}
+        </View>
+
+        <Text
+          style={{
+            fontWeight: '900',
+            color: isOpenNow ? 'green' : 'firebrick',
+          }}>
+          {isOpenNow ? 'Открыто' : 'Закрыто'}
+        </Text>
+      </View>
+    );
+  };
 
   const renderContacts = () => {
-    return contacts.map(x => {
-      // if not an email then it's a phone
-      const isEmail = x.connection_channel.name === "Email";
+    return (
+      <View style={styles.section}>
+        {contacts.map(x => {
+          // if not an email then it's a phone
+          const isEmail = x.connection_channel.name === 'Email';
 
-      return (
-        <TouchableOpacity key={x.id} onPress={() => callNumber(x.info)}>
-          <View style={[styles.textWithIcon]}>
-            <Icon name={isEmail ? 'email' : 'phone'} size={15} color={COLORS.PRIMARY} />
-            <Text style={[styles.highlighted, {marginLeft: 5}]}>{x.info}</Text>
-          </View>
-        </TouchableOpacity>
-      );
-    });
+          return (
+            <TouchableOpacity
+              key={x.id}
+              onPress={() =>
+                isEmail ? sendEmail(x.info) : callNumber(x.info)
+              }>
+              <View style={[styles.textWithIcon]}>
+                <Icon
+                  name={isEmail ? 'email' : 'phone'}
+                  size={15}
+                  color={COLORS.PRIMARY}
+                />
+                <Text style={[styles.highlighted, {marginLeft: 5}]}>
+                  {x.info}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
+    );
+  };
+
+  const renderImageBlank = () => {
+    return (
+      <View
+        style={styles.imageBlankContainer}>
+        <Image
+          style={styles.imageBlankPlaceholder}
+          source={require('../../assets/no-photo-available.png')}
+          resizeMode="contain"
+        />
+      </View>
+    );
   };
 
   return (
     <View style={{flex: 1}}>
-      <ScrollView
-        style={{flex: 1}}
-        // scrollEventThrottle={16}
-        // onScroll={Animated.event(
-        //   [{nativeEvent: {contentOffset: {y: scrollY}}}]
-        // )}
-      >
+      <ScrollView style={{flex: 1}}>
         {/* Map */}
-        <Animated.View
-          style={{
-            // position: 'absolute',
-            // top: 0,
-            // left: 0,
-            // right: 0,
-            // opacity: .3,
-            height: mapHeight,
-            // zIndex: 2,
-          }}>
+        <View style={{height: mapHeight}}>
           <Map mapHeight={mapHeight} pharmCoordinates={coordinates} />
-        </Animated.View>
+        </View>
 
-        <Animated.View
-          style={{
-            // top: infoContentTopOffset,
-            padding: 10,
-          }}>
-          {/* <Button title="toggle" onPress={toggleMapHeight}/> */}
+        <View style={{padding: 10}}>
+          {renderDrugInfo()}
 
           {/* Pharmacy Info */}
           <Text style={styles.pharmacyName}>{name}</Text>
-
-          <View style={styles.section}>
-            <Text style={styles.address}>{address}</Text>
-            <View
-              style={[
-                styles.textWithIcon,
-                {marginTop: 10, justifyContent: 'flex-end'},
-              ]}>
-              <Icon name="clock-outline" size={15} color="#666" />
-              <Text style={{marginLeft: 5, color: '#666'}}>
-                Местоположение не определено
-              </Text>
-            </View>
-          </View>
-
-          {/* <Text style={styles.label}>Режим работы</Text> */}
-
-          
-          <View style={[styles.justified, styles.section]}>
-            <View style={{flexDirection: 'column'}}>
-              {schedule.split(';').map(x => x.trim()).map((scheduleItem, index) => (
-                <View key={index} style={styles.textWithIcon}>
-                  <Icon name="clock-outline" size={15} />
-                  <Text style={{marginLeft: 5}}>{scheduleItem}</Text>
-                </View>
-              ))}
-            </View>
-
-            <Text
-              style={{
-                fontWeight: '900',
-                color: isOpenNow ? 'green' : 'firebrick',
-              }}>
-              {isOpenNow ? 'Открыто' : 'Закрыто'}
-            </Text>
-          </View>
-
-          {/* <Text style={styles.label}>Контакты</Text> */}
-          <View style={styles.section}>{renderContacts()}</View>
 
           <View
             style={{
               flexDirection: 'row',
               justifyContent: 'center',
-              margin: 20,
             }}>
             <BorderlessButton
               onPress={() => setSearchPharm(pharmacy, navigation)}
@@ -157,26 +170,17 @@ function PharmacyScreen({navigation, route, setSearchPharm}) {
             />
           </View>
 
+          {renderLocation()}
+
+          {renderSchedule()}
+
+          {renderContacts()}
+
           {/* Pharmacy Images */}
           {/* <ImageSlider /> */}
-          <View
-            style={{
-              width: '100%',
-              // padding: 20,
-              height: 200,
-            }}>
-            <Image
-              source={require('../../assets/no-photo-available.png')}
-              style={{
-                flex: 1,
-                width: undefined,
-                height: undefined,
-                resizeMode: 'contain',
-              }}
-              resizeMode="contain"
-            />
-          </View>
-        </Animated.View>
+          {renderImageBlank()}
+
+        </View>
       </ScrollView>
     </View>
   );
@@ -193,7 +197,6 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 10,
   },
-  itemName: {},
   section: {
     backgroundColor: 'white',
     borderRadius: 5,
@@ -216,11 +219,7 @@ const styles = StyleSheet.create({
   itemDistance: {
     color: COLORS.FADED,
   },
-  phone: {},
-  // schedule: {
-  //   flexDirection: 'row',
-  //   alignItems: 'center',
-  // },
+
   textWithIcon: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -234,9 +233,24 @@ const styles = StyleSheet.create({
     color: COLORS.PRIMARY,
     fontWeight: 'bold',
   },
+  bold: {
+    fontWeight: 'bold',
+  },
   label: {
     marginTop: 15,
     textAlign: 'center',
     color: '#666',
   },
+  imageBlankContainer: {
+    width: '100%',
+    height: 200,
+    marginTop: 10,
+  },
+  imageBlankPlaceholder: {
+    flex: 1,
+    width: undefined,
+    height: undefined,
+    resizeMode: 'contain',
+  },
+
 });

@@ -4,6 +4,7 @@ import {RefreshControl, FlatList, View, ActivityIndicator, Text} from 'react-nat
 import ItemCard from './ItemCard';
 import NoContentFiller from '../../components/NoContentFiller';
 import {COLORS} from '../../config';
+import { getWordEnding } from "../../utils";
 // actions
 import {loadNextPage} from '../../modules/search';
 
@@ -19,40 +20,32 @@ function SearchScreen({
 
   const renderHeader = () => { 
     if (!count) return null;
+    const text = `Найдено ${count} ${getWordEnding(count, ['результат', 'результата', 'результатов'])}`;
 
+    getWordEnding
     return (
         <View style={{ paddingHorizontal: 10}}>
-          <Text style={{color: '#666'}}>Найдено {count} результатов</Text>
+          <Text style={{color: '#666'}}>{text}</Text>
         </View>
       );
     }
 
   const renderItem = ({item}) => {
+    console.log(item)
     return (
       <ItemCard
         item={item}
         onOpen={() =>
           navigation.navigate('Pharmacy', {
-            pharmacyId: item.price_list.pharmacy.id,
             title: item.name,
             pharmacy: item.price_list.pharmacy,
+            drug: { price: item.price, quantity: item.quantity, drugName: item.name, country: item.country }
           })
         }
       />
     );
   };
 
-
-  const renderSeparator = () => (
-    <View
-      style={{
-        height: 2,
-        backgroundColor: '#bbb',
-        flex: 1,
-        marginHorizontal: 10,
-      }}
-    />
-  );
 
   const renderFooter = () => {
     if (!isLoadingNextPage) return null;
@@ -84,7 +77,6 @@ function SearchScreen({
         onEndReached={loadNextPage}
         onEndReachedThreshold={0.5}
         initialNumToRender={10}
-        ItemSeparatorComponent={renderSeparator}
         ListEmptyComponent={
           value && <NoContentFiller text={`По запросу '${value}'\nничего не найдено :(` } />
         }

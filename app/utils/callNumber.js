@@ -1,9 +1,7 @@
-import {Linking, Alert } from 'react-native';
+import {Linking, Alert} from 'react-native';
 
 export const callNumber = phone => {
-  console.log(phone)
   const phoneNumber = `tel:${phone}`
-  console.log(phoneNumber)
   
   Linking.canOpenURL(phoneNumber)
     .then(supported => {

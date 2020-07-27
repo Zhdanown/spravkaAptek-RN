@@ -91,14 +91,28 @@ export const loadNextPage = () => async (dispatch, getState) => {
   dispatch({ type: LOAD_NEXT_PAGE, payload: response.data })
 }
 
-export function setSearchPharm(pharm, navigation) {
+export const setSearchPharm = (pharm, navigation) => async (dispatch, getState) => {
   if (navigation) {
     navigation.navigate('Search')
   }
-  console.log(pharm)
-  return { type: SET_SEARCH_PHARM, pharm}
+   
+  dispatch({ type: SET_SEARCH_PHARM, pharm});
+
+  // refresh results with selected pharm
+  const { value } = getState().search;
+  if (value.length > 2) {
+    dispatch(searchResults(value));
+  }
+
 }
 
-export function clearSearchPharm() {
-  return { type: SET_SEARCH_PHARM, pharm: null}
+export const clearSearchPharm = () => (dispatch, getState) => {
+
+  dispatch({ type: SET_SEARCH_PHARM, pharm: null});
+
+  // refresh results without selected pharn
+  const { value } = getState().search;
+  if (value.length > 2) {
+    dispatch(searchResults(value));
+  }
 }
