@@ -1,25 +1,46 @@
 import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import MIcon from 'react-native-vector-icons/MaterialIcons';
 import {COLORS} from '../../config';
-import { formatDate } from "../../utils";
+import { formatDate, calculateDistance } from "../../utils";
 
+const withLocation = Component => {
+  return props => {
+    const {price_list: {pharmacy: {latitude, longitude}}} = props.item;
+    const {location} = props;
+    const distance = location ? calculateDistance(location, {latitude, longitude}) : null
+    return <Component {...props} distance={distance}/>
+  }
+}
 class ItemCard extends React.PureComponent {
+  renderLocation() {
+    const { distance, location, isTrackingLocation } = this.props;
+    const iconName = location ? (distance && "location-on") : (isTrackingLocation ? "loop" : "location-off");
+    const text = location ? (distance && `${distance} м`) : (!isTrackingLocation && 'н/д' );
+    return (
+      <Text style={{color: COLORS.FADED}}>
+        {<MIcon name={iconName} size={15}/>}
+        {text}
+      </Text>
+    )
+  }
+
   render() {
     const {
       name,
       country,
       price,
       quantity,
-      distance,
       add_date,
       price_list: {
         pharmacy,
-        pharmacy: {short_address: address, is_work_now: isOpenNow},
+        pharmacy: {
+          short_address: address, 
+          is_work_now: isOpenNow,
+        },
       },
     } = this.props.item;
-    
-    const added = formatDate(add_date)
+    const added = formatDate(add_date);
 
     return (
       <TouchableOpacity onPress={this.props.onOpen}>
@@ -39,9 +60,7 @@ class ItemCard extends React.PureComponent {
           {/* address and distance */}
           <View style={styles.addressDistance}>
             <Text style={styles.itemDistance}>
-              <Icon name="map-marker-outline" size={15} />
-              {}
-              {distance ? distance + 'км' : 'н/д'}
+              {this.renderLocation()}
             </Text>
             <Text style={styles.pharmacyAddress}>{address}</Text>
           </View>
@@ -51,7 +70,7 @@ class ItemCard extends React.PureComponent {
           {/* price, quantity, status */}
           <View style={[styles.justified, styles.quantityPrice]}>
             <Text style={[styles.itemQuantity, styles.bold]}>
-              В наличии <Text style={styles.bold}>{quantity}</Text> ед
+              В наличии: <Text style={styles.bold}>{quantity}</Text>
             </Text>
             <Text style={[styles.itemPrice, styles.bold]}>
               по <Text style={styles.bold}>{price} &#8381;</Text>
@@ -59,13 +78,12 @@ class ItemCard extends React.PureComponent {
 
           </View>
         </View>
-        {/* </View> */}
       </TouchableOpacity>
     );
   }
 }
 
-export default ItemCard;
+export default withLocation(ItemCard);
 
 const styles = StyleSheet.create({
   item: {
@@ -94,6 +112,7 @@ const styles = StyleSheet.create({
   },
   pharmacyAddress: {
     color: COLORS.FADED,
+    flex: 1,
   },
   isPharmacyOpen: {},
   quantityPrice: {

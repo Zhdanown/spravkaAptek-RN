@@ -2,6 +2,8 @@ import React from 'react';
 import {View, Text, StyleSheet, Animated} from 'react-native';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
 import NoContentFiller from './NoContentFiller';
+import IconButton from './IconButton';
+import MIcon from 'react-native-vector-icons/MaterialIcons';
 
 const styles = StyleSheet.create({
   map: {
@@ -9,34 +11,70 @@ const styles = StyleSheet.create({
   },
 });
 
-// latitude: 51.749103
-// longitude: 36.226869
+export default ({mapHeight, pharmCoordinates, userLocation}) => {
+  console.log('userLocation', userLocation);
+  console.log('pharmCoordinates', pharmCoordinates);
+  const [zoom, setZoom] = React.useState(15);
+  const _map = React.useRef();
 
-export default ({mapHeight, pharmCoordinates}) => {
-  const [latitude, longitude] = pharmCoordinates;
+  React.useEffect(() => {
+    if (_map.current) {
+      _map.current.animateCamera(
+        {
+          zoom,
+        },
+        {duration: 400},
+      );
+    }
+  }, [zoom]);
+
 
   const [region, setRegion] = React.useState({
-    latitude,
-    longitude,
+    ...pharmCoordinates,
     latitudeDelta: 0.015,
     longitudeDelta: 0.0121,
   });
 
   const changeRegion = newRegion => {
-    console.log(newRegion);
     setRegion(newRegion);
   };
 
-  if (latitude || longitude)
+  if (pharmCoordinates)
     return (
-      <MapView
-        provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-        style={styles.map}
-        region={region}
-        // initialRegion={region}
-        onRegionChangeComplete={changeRegion}>
-        <Marker coordinate={{latitude, longitude}} />
-      </MapView>
+      <>
+        <MapView
+          ref={_map}
+          provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+          style={[styles.map, {flex: 1}]}
+          region={region}
+          // initialRegion={region}
+          onRegionChangeComplete={changeRegion}>
+          <Marker coordinate={pharmCoordinates} />
+          {userLocation && <Marker coordinate={userLocation} />}
+        </MapView>
+        <View
+          style={{
+            position: 'absolute',
+            bottom: 10,
+            right: 10,
+            height: 100,
+            borderWidth: 1,
+            borderRadius: 5,
+            borderColor: 'steelblue',
+            width: 50,
+          }}>
+          <IconButton
+            style={{alignItems: 'center', height: 50, justifyContent: 'center'}}
+            onPress={() => setZoom(zoom + 1)}>
+            <MIcon name="add" size={36} color="steelblue" />
+          </IconButton>
+          <IconButton
+            style={{alignItems: 'center', height: 50, justifyContent: 'center'}}
+            onPress={() => setZoom(zoom - 1)}>
+            <MIcon name="remove" size={36} color="steelblue" />
+          </IconButton>
+        </View>
+      </>
     );
   else return <NoContentFiller text="Координаты аптеки не доступны" />;
 };

@@ -12,7 +12,8 @@ import {
 } from 'react-native';
 import {useWindowDimensions} from 'react-native';
 import {Image} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import MIcon from 'react-native-vector-icons/MaterialIcons';
 
 import Map from '../../components/Map';
 import NoContentFiller from '../../components/NoContentFiller';
@@ -21,14 +22,26 @@ import ImageSlider from '../../components/ImageSlider';
 import {COLORS} from '../../config';
 import BorderlessButton from '../../components/BorderlessButton';
 
-import {callNumber, sendEmail} from '../../utils';
+import {callNumber, sendEmail, calculateDistance} from '../../utils';
 
-function PharmacyScreen({navigation, route, setSearchPharm}) {
+function PharmacyScreen({navigation, route, setSearchPharm, ...props}) {
+  const {location, isTrackingLocation} = props;
   const {pharmacy, drug} = route.params;
+  const {latitude, longitude} = pharmacy;
+  const pharmCoordinates = {latitude: +latitude, longitude: +longitude};
+
+  const [distance, setDistance] = React.useState(null);
+
+  React.useEffect(() => {
+    const newDistance = location
+      ? calculateDistance(location, {latitude, longitude})
+      : null;
+    setDistance(newDistance);
+  }, [location]);
 
   if (!pharmacy) return <NoContentFiller text="Аптека не найдена" />;
 
-  const coordinates = [+pharmacy.latitude, +pharmacy.longitude];
+
   const {
     name,
     short_address: address,
@@ -38,7 +51,6 @@ function PharmacyScreen({navigation, route, setSearchPharm}) {
   } = pharmacy;
 
   const {drugName, country, price, quantity} = drug;
-
   const windowHeight = useWindowDimensions().height;
   const mapHeight = windowHeight * 0.5;
 
@@ -51,7 +63,7 @@ function PharmacyScreen({navigation, route, setSearchPharm}) {
         </Text>
 
         <View style={[styles.justified, {marginTop: 5}]}>
-          <Text style={styles.bold}>В наличии {quantity} ед</Text>
+          <Text style={styles.bold}>В наличии: {quantity}</Text>
           <Text style={styles.bold}>по {price} &#8381;</Text>
         </View>
       </View>
@@ -59,6 +71,15 @@ function PharmacyScreen({navigation, route, setSearchPharm}) {
   };
 
   const renderLocation = () => {
+    const iconName = location
+      ? distance && 'location-on'
+      : isTrackingLocation
+      ? 'loop'
+      : 'location-off';
+    const text = location
+      ? distance && `${distance} м`
+      : !isTrackingLocation && 'местоположение не определено';
+
     return (
       <View style={styles.section}>
         <Text style={styles.address}>{address}</Text>
@@ -67,9 +88,9 @@ function PharmacyScreen({navigation, route, setSearchPharm}) {
             styles.textWithIcon,
             {marginTop: 10, justifyContent: 'flex-end'},
           ]}>
-          <Icon name="clock-outline" size={15} color="#666" />
-          <Text style={{marginLeft: 5, color: '#666'}}>
-            Местоположение не определено
+          <Text style={{color: COLORS.FADED}}>
+            {<MIcon name={iconName} size={15} />}
+            {text}
           </Text>
         </View>
       </View>
@@ -85,7 +106,7 @@ function PharmacyScreen({navigation, route, setSearchPharm}) {
             .map(x => x.trim())
             .map((scheduleItem, index) => (
               <View key={index} style={styles.textWithIcon}>
-                <Icon name="clock-outline" size={15} />
+                <MCIcon name="clock-outline" size={15} />
                 <Text style={{marginLeft: 5}}>{scheduleItem}</Text>
               </View>
             ))}
@@ -116,7 +137,7 @@ function PharmacyScreen({navigation, route, setSearchPharm}) {
                 isEmail ? sendEmail(x.info) : callNumber(x.info)
               }>
               <View style={[styles.textWithIcon]}>
-                <Icon
+                <MCIcon
                   name={isEmail ? 'email' : 'phone'}
                   size={15}
                   color={COLORS.PRIMARY}
@@ -134,8 +155,7 @@ function PharmacyScreen({navigation, route, setSearchPharm}) {
 
   const renderImageBlank = () => {
     return (
-      <View
-        style={styles.imageBlankContainer}>
+      <View style={styles.imageBlankContainer}>
         <Image
           style={styles.imageBlankPlaceholder}
           source={require('../../assets/no-photo-available.png')}
@@ -150,7 +170,11 @@ function PharmacyScreen({navigation, route, setSearchPharm}) {
       <ScrollView style={{flex: 1}}>
         {/* Map */}
         <View style={{height: mapHeight}}>
-          <Map mapHeight={mapHeight} pharmCoordinates={coordinates} />
+          <Map
+            mapHeight={mapHeight}
+            pharmCoordinates={pharmCoordinates}
+            userLocation={location}
+          />
         </View>
 
         <View style={{padding: 10}}>
@@ -179,15 +203,20 @@ function PharmacyScreen({navigation, route, setSearchPharm}) {
           {/* Pharmacy Images */}
           {/* <ImageSlider /> */}
           {renderImageBlank()}
-
         </View>
       </ScrollView>
     </View>
   );
 }
 
+const mapStateToProps = state => {
+  return {
+    ...state.location,
+  };
+};
+
 export default connect(
-  null,
+  mapStateToProps,
   {setSearchPharm},
 )(PharmacyScreen);
 
@@ -252,5 +281,4 @@ const styles = StyleSheet.create({
     height: undefined,
     resizeMode: 'contain',
   },
-
 });
