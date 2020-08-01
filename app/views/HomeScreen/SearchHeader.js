@@ -17,7 +17,6 @@ const SearchHeader = ({selectedPharm, clearSearchPharm, searchResults}) => {
   const [searchValue, setSearchValue] = React.useState('');
 
   const updateSearchResults = () => {
-    console.log(searchValue)
     if (searchValue.length > 2) {
       searchResults(searchValue)
     }

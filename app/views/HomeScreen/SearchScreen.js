@@ -15,14 +15,16 @@ function SearchScreen({
   loadNextPage,
   isLoadingNextPage,
   count,
-  value
+  value,
+  location,
+  locationError,
+  isTrackingLocation,
 }) {
 
   const renderHeader = () => { 
     if (!count) return null;
     const text = `Найдено ${count} ${getWordEnding(count, ['результат', 'результата', 'результатов'])}`;
 
-    getWordEnding
     return (
         <View style={{ paddingHorizontal: 10}}>
           <Text style={{color: '#666'}}>{text}</Text>
@@ -31,10 +33,11 @@ function SearchScreen({
     }
 
   const renderItem = ({item}) => {
-    console.log(item)
     return (
       <ItemCard
         item={item}
+        location={location}
+        isTrackingLocation={isTrackingLocation}
         onOpen={() =>
           navigation.navigate('Pharmacy', {
             title: item.name,
@@ -94,6 +97,7 @@ function mapStateToProps(state) {
     isLoadingNextPage: state.search.isLoadingNextPage,
     value: state.search.value,
     count: state.search.count,
+    ...state.location
   };
 }
 
