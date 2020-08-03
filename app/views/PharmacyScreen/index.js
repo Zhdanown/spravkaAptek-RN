@@ -22,7 +22,7 @@ import ImageSlider from '../../components/ImageSlider';
 import {COLORS} from '../../config';
 import BorderlessButton from '../../components/BorderlessButton';
 
-import {callNumber, sendEmail, calculateDistance} from '../../utils';
+import {callNumber, sendEmail, getRoute, calculateDistance} from '../../utils';
 
 function PharmacyScreen({navigation, route, setSearchPharm, ...props}) {
   const {location, isTrackingLocation} = props;
@@ -176,6 +176,17 @@ function PharmacyScreen({navigation, route, setSearchPharm, ...props}) {
             userLocation={location}
           />
         </View>
+
+        <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'center',
+            }}>
+            <BorderlessButton
+              onPress={() => getRoute(latitude, longitude)}
+              text="Проложить маршрут"
+            />
+          </View>
 
         <View style={{padding: 10}}>
           {renderDrugInfo()}
