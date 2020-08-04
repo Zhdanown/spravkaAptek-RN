@@ -25,7 +25,7 @@ const Tab = createBottomTabNavigator();
 function ClearFilterButton({clearFilters}) {
   return (
     <View style={{marginRight: 10}}>
-      <BorderlessButton onPress={() => console.log('sdf')} text="Очистить" />
+      <BorderlessButton onPress={() => console.log('sdf')} title="Очистить" />
 
       {/* <Button
         onPress={clearFilters}
