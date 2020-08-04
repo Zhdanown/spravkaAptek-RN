@@ -11,16 +11,16 @@ import {
   Animated,
 } from 'react-native';
 import {useWindowDimensions} from 'react-native';
-import {Image} from 'react-native';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 
 import Map from '../../components/Map';
 import NoContentFiller from '../../components/NoContentFiller';
 import ImageSlider from '../../components/ImageSlider';
+import ImageBlank from "../../components/ImageBlank";
+import BorderlessButton from '../../components/BorderlessButton';
 
 import {COLORS} from '../../config';
-import BorderlessButton from '../../components/BorderlessButton';
 
 import {callNumber, sendEmail, getRoute, calculateDistance} from '../../utils';
 
@@ -77,7 +77,7 @@ function PharmacyScreen({navigation, route, setSearchPharm, ...props}) {
       ? 'loop'
       : 'location-off';
     const text = location
-      ? distance && `${distance} м`
+      ? distance && `${distance} км`
       : !isTrackingLocation && 'местоположение не определено';
 
     return (
@@ -88,7 +88,7 @@ function PharmacyScreen({navigation, route, setSearchPharm, ...props}) {
             styles.textWithIcon,
             {marginTop: 10, justifyContent: 'flex-end'},
           ]}>
-          <Text style={{color: COLORS.FADED}}>
+          <Text style={{color: COLORS.FADED, fontWeight: 'bold'}}>
             {<MIcon name={iconName} size={15} />}
             {text}
           </Text>
@@ -153,18 +153,6 @@ function PharmacyScreen({navigation, route, setSearchPharm, ...props}) {
     );
   };
 
-  const renderImageBlank = () => {
-    return (
-      <View style={styles.imageBlankContainer}>
-        <Image
-          style={styles.imageBlankPlaceholder}
-          source={require('../../assets/no-photo-available.png')}
-          resizeMode="contain"
-        />
-      </View>
-    );
-  };
-
   return (
     <View style={{flex: 1}}>
       <ScrollView style={{flex: 1}}>
@@ -184,7 +172,7 @@ function PharmacyScreen({navigation, route, setSearchPharm, ...props}) {
             }}>
             <BorderlessButton
               onPress={() => getRoute(latitude, longitude)}
-              text="Проложить маршрут"
+              title="Проложить маршрут"
             />
           </View>
 
@@ -201,7 +189,7 @@ function PharmacyScreen({navigation, route, setSearchPharm, ...props}) {
             }}>
             <BorderlessButton
               onPress={() => setSearchPharm(pharmacy, navigation)}
-              text="Искать в этой аптеке"
+              title="Искать в этой аптеке"
             />
           </View>
 
@@ -213,7 +201,8 @@ function PharmacyScreen({navigation, route, setSearchPharm, ...props}) {
 
           {/* Pharmacy Images */}
           {/* <ImageSlider /> */}
-          {renderImageBlank()}
+          <ImageBlank/>
+
         </View>
       </ScrollView>
     </View>
@@ -280,16 +269,5 @@ const styles = StyleSheet.create({
     marginTop: 15,
     textAlign: 'center',
     color: '#666',
-  },
-  imageBlankContainer: {
-    width: '100%',
-    height: 200,
-    marginTop: 10,
-  },
-  imageBlankPlaceholder: {
-    flex: 1,
-    width: undefined,
-    height: undefined,
-    resizeMode: 'contain',
-  },
+  }
 });

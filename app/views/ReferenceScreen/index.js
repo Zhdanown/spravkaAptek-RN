@@ -1,68 +1,49 @@
 import React from 'react';
-import {View, Text, RefreshControl, StyleSheet} from 'react-native';
-import {FlatList} from 'react-native-gesture-handler';
-import {referenceData} from '../../assets/data';
-import {COLORS} from '../../config';
+import {createStackNavigator} from '@react-navigation/stack';
+
+import GroupList from './GroupList';
+import Group from './Group';
+import Category from './Category';
+import Product from './Product';
+import ProductManual from './ProductManual';
+
+const Stack = createStackNavigator();
 
 const ReferenceScreen = () => {
-  const [data, setData] = React.useState([]);
-  const [isRefreshing, setIsRefreshing] = React.useState(false);
-
-  const loadData = () => {
-    setData([]);
-    setIsRefreshing(true);
-
-    setTimeout(() => {
-      setData(referenceData);
-      setIsRefreshing(false);
-    }, 0);
-  };
-
-  React.useEffect(() => {
-    loadData();
-  }, []);
-
   return (
-    <FlatList
-      data={data}
-      renderItem={({item}) => <Item item={item} />}
-      refreshControl={
-        <RefreshControl
-          colors={[COLORS.PRIMARY]}
-          refreshing={isRefreshing}
-          onRefresh={loadData}
-        />
-      }
-    />
+    <Stack.Navigator>
+      <Stack.Screen
+        name="GroupList"
+        component={GroupList}
+        options={{
+          title: 'Группы препаратов',
+        }}
+      />
+      <Stack.Screen
+        name="Group"
+        component={Group}
+        options={({route}) => ({title: route.params.title})}
+      />
+      <Stack.Screen
+        name="Category"
+        component={Category}
+        options={({route}) => ({title: route.params.title})}
+      />
+      <Stack.Screen
+        name="Product"
+        component={Product}
+        options={({route}) => ({title: route.params.title})}
+      />
+      <Stack.Screen
+        name="ProductManual"
+        component={ProductManual}
+        options={({route}) => ({title: route.params.title})}
+      />
+    </Stack.Navigator>
   );
 };
 
-function Item({item}) {
-  const {name, group, subgroup, country} = item;
-
-  return (
-    <View style={{marginVertical: 10, padding: 10}}>
-      <Text>{name}</Text>
-      <Text>
-        Группа: <Text style={styles.highlighted}>{group}</Text>
-      </Text>
-      {subgroup && (
-        <Text>
-          Подгруппа: <Text style={styles.highlighted}>{subgroup}</Text>
-        </Text>
-      )}
-      <Text>
-        Страна: <Text style={styles.highlighted}>{country}</Text>
-      </Text>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  highlighted: {
-    color: COLORS.PRIMARY,
-    fontWeight: 'bold',
-  },
-});
-
 export default ReferenceScreen;
+
+//https://spravkaaptek.ru/api/drug-info/66933/ - карточка препарата
+//const response = await Axios.get(API_URL + `drug-info/${productId}/`);
