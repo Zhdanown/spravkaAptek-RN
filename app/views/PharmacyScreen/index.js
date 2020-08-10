@@ -29,7 +29,6 @@ function PharmacyScreen({navigation, route, setSearchPharm, ...props}) {
   const {pharmacy, drug} = route.params;
   const {latitude, longitude} = pharmacy;
   const pharmCoordinates = {latitude: +latitude, longitude: +longitude};
-
   const [distance, setDistance] = React.useState(null);
 
   React.useEffect(() => {
@@ -153,6 +152,14 @@ function PharmacyScreen({navigation, route, setSearchPharm, ...props}) {
     );
   };
 
+  const renderPhotos = () => {
+    const {pharmacy_photos} = pharmacy;
+    if (pharmacy_photos.length) return (
+      <ImageSlider imageURLs={pharmacy_photos.map(photo => photo.img)}/>
+    ) 
+    return <ImageBlank/>
+  }
+
   return (
     <View style={{flex: 1}}>
       <ScrollView style={{flex: 1}}>
@@ -194,14 +201,9 @@ function PharmacyScreen({navigation, route, setSearchPharm, ...props}) {
           </View>
 
           {renderLocation()}
-
           {renderSchedule()}
-
           {renderContacts()}
-
-          {/* Pharmacy Images */}
-          {/* <ImageSlider /> */}
-          <ImageBlank/>
+          {renderPhotos()}
 
         </View>
       </ScrollView>
