@@ -1,6 +1,10 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {clearSearchPharm, searchResults} from '../../modules/search';
+import {
+  clearSearchPharm,
+  searchResults,
+  multiSearch,
+} from '../../modules/search';
 
 import {View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
@@ -9,28 +13,31 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import IconButton from '../../components/IconButton';
 import SelectedPharmSearch from './SelectedPharmSearch';
-import { COLORS } from '../../config';
+import {COLORS} from '../../config';
 
-const SearchHeader = ({selectedPharm, clearSearchPharm, searchResults}) => {
+const SearchHeader = ({
+  selectedPharm,
+  clearSearchPharm,
+  multiSearch,
+}) => {
   const navigation = useNavigation();
 
   const [searchValue, setSearchValue] = React.useState('');
 
-  const updateSearchResults = () => {
-    if (searchValue.length > 2) {
-      searchResults(searchValue)
-    }
-  };
+  React.useEffect(() => {
+      multiSearch(searchValue)
+  }, [searchValue])
+
 
   function FilterButton() {
     return (
       <View
         style={{
           paddingVertical: 18,
-          paddingHorizontal: 16
+          paddingHorizontal: 16,
         }}>
         <IconButton onPress={() => navigation.navigate('Filter')}>
-          <Icon name="filter-variant" size={30} color='white' />
+          <Icon name="filter-variant" size={30} color="white" />
         </IconButton>
       </View>
     );
@@ -42,11 +49,10 @@ const SearchHeader = ({selectedPharm, clearSearchPharm, searchResults}) => {
         backgroundColor: COLORS.PRIMARY,
         marginTop: -0,
       }}>
-      <View style={{ flexDirection: 'row' }}>
-      
+      <View style={{flexDirection: 'row'}}>
         <SearchBar
           value={searchValue}
-          onSubmitEditing={updateSearchResults}
+          // onSubmitEditing={updateSearchResults}
           onChangeText={setSearchValue}
           placeholder="мин. 3 символа"
           platform="default"
@@ -61,7 +67,7 @@ const SearchHeader = ({selectedPharm, clearSearchPharm, searchResults}) => {
           }}
           inputContainerStyle={{
             backgroundColor: 'white',
-            borderRadius: 8
+            borderRadius: 8,
           }}
         />
         <FilterButton navigation={navigation} />
@@ -86,5 +92,5 @@ function mapStateToProps(state) {
 
 export default connect(
   mapStateToProps,
-  {clearSearchPharm, searchResults},
+  {clearSearchPharm, searchResults, multiSearch},
 )(SearchHeader);
