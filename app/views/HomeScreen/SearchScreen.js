@@ -1,36 +1,42 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {RefreshControl, FlatList, View, ActivityIndicator, Text} from 'react-native';
+import {
+  RefreshControl,
+  FlatList,
+  View,
+  ActivityIndicator,
+  Text,
+} from 'react-native';
 import ItemCard from './ItemCard';
+import Dropdown from "./Dropdown";
 import NoContentFiller from '../../components/NoContentFiller';
 import {COLORS} from '../../config';
-import { getWordEnding } from "../../utils";
+import {getWordEnding} from '../../utils';
 // actions
 import {loadNextPage} from '../../modules/search';
 
-function SearchScreen({
-  navigation,
-  items,
-  isLoading,
-  loadNextPage,
-  isLoadingNextPage,
-  count,
-  value,
-  location,
-  locationError,
-  isTrackingLocation,
-}) {
+function SearchScreen(props) {
 
-  const renderHeader = () => { 
+  const {navigation} = props;
+  const {multiSearchItems, multiSearchValue, isMultiSearching} = props;
+  const {items, isLoading, count, value} = props;
+  const {loadNextPage, isLoadingNextPage} = props;
+  const {location, locationError, isTrackingLocation} = props;
+
+  const renderHeader = () => {
     if (!count) return null;
-    const text = `Найдено ${count} ${getWordEnding(count, ['результат', 'результата', 'результатов'])}`;
+    const text = `Найдено ${count} ${getWordEnding(count, [
+      'результат',
+      'результата',
+      'результатов',
+    ])}`;
 
     return (
-        <View style={{ paddingHorizontal: 10}}>
-          <Text style={{color: '#666'}}>{text}</Text>
-        </View>
-      );
-    }
+      <View style={{paddingHorizontal: 10}}>
+        <Text style={{color: '#666'}}>{text}</Text>
+      </View>
+    );
+  };
 
   const renderItem = ({item}) => {
     return (
@@ -42,13 +48,17 @@ function SearchScreen({
           navigation.navigate('Pharmacy', {
             title: item.name,
             pharmacy: item.price_list.pharmacy,
-            drug: { price: item.price, quantity: item.quantity, drugName: item.name, country: item.country }
+            drug: {
+              price: item.price,
+              quantity: item.quantity,
+              drugName: item.name,
+              country: item.country,
+            },
           })
         }
       />
     );
   };
-
 
   const renderFooter = () => {
     if (!isLoadingNextPage) return null;
@@ -61,6 +71,12 @@ function SearchScreen({
       />
     );
   };
+
+  const renderDropdown = () => {
+    if (multiSearchItems.length) {
+      return  <Dropdown options={multiSearchItems} />
+    }
+  }
 
   return (
     <>
@@ -81,23 +97,25 @@ function SearchScreen({
         onEndReachedThreshold={0.5}
         initialNumToRender={10}
         ListEmptyComponent={
-          value && <NoContentFiller text={`По запросу '${value}'\nничего не найдено :(` } />
+          value && !isLoading && (
+            <NoContentFiller
+              text={`По запросу '${value}'\nничего не найдено :(`}
+            />
+          )
         }
-        contentContainerStyle={{ flexGrow: 1, }}
+        contentContainerStyle={{flexGrow: 1}}
         ListFooterComponent={renderFooter()}
       />
+      {renderDropdown()}
     </>
   );
 }
 
 function mapStateToProps(state) {
   return {
+    ...state.search,
     items: state.search.fetchedItems,
-    isLoading: state.search.isLoading,
-    isLoadingNextPage: state.search.isLoadingNextPage,
-    value: state.search.value,
-    count: state.search.count,
-    ...state.location
+    ...state.location,
   };
 }
 
