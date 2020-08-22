@@ -4,7 +4,7 @@ import React from 'react';
 import {Provider} from 'react-redux';
 import store from './modules/store';
 
-import {View, Button, Text} from 'react-native';
+import {View, SafeAreaView} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 // import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -111,4 +111,14 @@ function App() {
   );
 }
 
-export default App;
+function withSafeAreaView(Component) {
+  return function (props) {
+    return (
+      <SafeAreaView style={{flex: 1}}>
+        <Component {...props}/>
+      </SafeAreaView>
+    )
+  };
+}
+
+export default withSafeAreaView(App);
