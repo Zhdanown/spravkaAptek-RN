@@ -83,6 +83,11 @@ target 'spravka_app' do
 
   pod 'react-native-webview', :path => '../node_modules/react-native-webview'
 
+  # set up react-native-permissions
+  permissions_path = '../node_modules/react-native-permissions/ios'
+  pod 'Permission-LocationWhenInUse', :path => "#{permissions_path}/LocationWhenInUse.podspec"
+
+
   target 'spravka_appTests' do
     inherit! :complete
     # Pods for testing
