@@ -3,7 +3,6 @@ import {Linking, Alert} from 'react-native';
 export const sendEmail = email => {
   
   const emailAddress = `mailto:${email}`
-  console.log(emailAddress)
   
   Linking.canOpenURL(emailAddress)
     .then(supported => {

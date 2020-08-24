@@ -98,7 +98,10 @@ const styles = StyleSheet.create({
     margin: 8,
     borderRadius: 8,
     backgroundColor: 'white',
-    // elevation: 1
+    shadowColor: '#ccc',
+    shadowOffset: {width: 1, height: 1},
+    shadowRadius: 4,
+    shadowOpacity: .5,
   },
   justified: {
     flexDirection: 'row',

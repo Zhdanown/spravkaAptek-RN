@@ -4,7 +4,6 @@ import {pharmacies} from "../../assets/data";
 
 
 const PharmaciesScreen = () => {
-  console.log(pharmacies)
   return (
     <View>
       <Text>Аптеки</Text>

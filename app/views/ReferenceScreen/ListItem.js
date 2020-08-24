@@ -4,7 +4,6 @@ import {COLORS} from '../../config';
 
 export default function ListItem({item, onOpen, renderTitle}) {
   const {drug_photos} = item;
-  console.log(drug_photos);
 
   const renderThumbnail = () => {
     if (!drug_photos) return null;

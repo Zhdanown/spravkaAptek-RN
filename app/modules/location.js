@@ -72,7 +72,6 @@ export const getLocation = () => async (dispatch, getState) => {
     var granted = await getPermission();
   } catch (error) {
     // permission not granted
-    console.log(error)
     dispatch({ type: SET_LOCATION_ERROR, error});
   }
   
@@ -81,7 +80,6 @@ export const getLocation = () => async (dispatch, getState) => {
 
     Geolocation.getCurrentPosition(
       pos => {
-        console.log(pos)
         const { latitude, longitude } = pos.coords;
         setTimeout(() => {
           dispatch({ type: SET_LOCATION, payload: { latitude: +latitude, longitude: +longitude } });

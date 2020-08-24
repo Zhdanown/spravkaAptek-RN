@@ -29,7 +29,6 @@ export default ({mapHeight, pharmCoordinates, userLocation}) => {
 
   const fitWithUserLocation = () => {
     if (_map.current) {
-      console.log(pharmCoordinates);
       _map.current.fitToCoordinates([pharmCoordinates, userLocation], {
         // animated: false,
         edgePadding: {top: 50, right: 50, bottom: 50, left: 50},
