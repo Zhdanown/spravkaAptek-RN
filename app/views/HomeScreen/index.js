@@ -1,13 +1,11 @@
 import React from 'react';
-import {Alert} from "react-native";
+
+import {connect} from "react-redux";
 import {createStackNavigator} from '@react-navigation/stack';
 
 import SearchScreen from './SearchScreen'
 import FilterScreen from './FilterScreen';
 import PharmacyScreen from "../PharmacyScreen";
-import SearchHeader from './SearchHeader';
-
-import {connect} from "react-redux";
 import {getLocation} from "../../modules/location";
 
 const Stack = createStackNavigator();
@@ -32,7 +30,7 @@ function HomeScreen(props) {
         component={SearchScreen}
         options={{
           title: 'Поиск',
-          header: props => <SearchHeader />,
+          headerShown: false,
         }}
       />
       <Stack.Screen name="Filter" component={FilterScreen} />

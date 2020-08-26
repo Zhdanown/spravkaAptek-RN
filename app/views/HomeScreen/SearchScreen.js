@@ -1,5 +1,4 @@
 import React from 'react';
-import {connect} from 'react-redux';
 import {
   RefreshControl,
   FlatList,
@@ -7,21 +6,22 @@ import {
   ActivityIndicator,
   Text,
 } from 'react-native';
+
+import { connect } from 'react-redux';
+
+import SearchHeader from './SearchHeader';
 import ItemCard from './ItemCard';
-import Dropdown from "./Dropdown";
 import NoContentFiller from '../../components/NoContentFiller';
-import {COLORS} from '../../config';
-import {getWordEnding} from '../../utils';
-// actions
-import {loadNextPage} from '../../modules/search';
+import { COLORS } from '../../config';
+import { getWordEnding } from '../../utils';
+import { loadNextPage } from '../../modules/search';
 
 function SearchScreen(props) {
 
-  const {navigation} = props;
-  const {multiSearchItems, multiSearchValue, isMultiSearching} = props;
-  const {items, isLoading, count, value} = props;
-  const {loadNextPage, isLoadingNextPage} = props;
-  const {location, locationError, isTrackingLocation} = props;
+  const { navigation } = props;
+  const { items, isLoading, count, value } = props;
+  const { loadNextPage, isLoadingNextPage } = props;
+  const { location, locationError, isTrackingLocation } = props;
 
   const renderHeader = () => {
     if (!count) return null;
@@ -32,13 +32,13 @@ function SearchScreen(props) {
     ])}`;
 
     return (
-      <View style={{paddingHorizontal: 10}}>
-        <Text style={{color: '#666'}}>{text}</Text>
+      <View style={{ paddingHorizontal: 10 }}>
+        <Text style={{ color: '#666' }}>{text}</Text>
       </View>
     );
   };
 
-  const renderItem = ({item}) => {
+  const renderItem = ({ item }) => {
     return (
       <ItemCard
         item={item}
@@ -65,23 +65,17 @@ function SearchScreen(props) {
     return (
       <ActivityIndicator
         color={COLORS.PRIMARY}
-        style={{marginBottom: 10}}
+        style={{ marginBottom: 10 }}
         animating
         size="large"
       />
     );
   };
 
-  const renderDropdown = () => {
-    if (multiSearchItems.length) {
-      return  <Dropdown options={multiSearchItems} />
-    }
-  }
-
   return (
     <>
-      {/* <SearchHeader /> */}
       <FlatList
+        style={{ transform: [{ translateY: 75 }] }}
         data={items}
         keyExtractor={(item, index) => index.toString()}
         renderItem={renderItem}
@@ -89,7 +83,7 @@ function SearchScreen(props) {
           <RefreshControl
             colors={[COLORS.PRIMARY]}
             refreshing={isLoading}
-            // onRefresh={loadResults}
+          // onRefresh={loadResults}
           />
         }
         ListHeaderComponent={renderHeader}
@@ -103,10 +97,12 @@ function SearchScreen(props) {
             />
           )
         }
-        contentContainerStyle={{flexGrow: 1}}
+        contentContainerStyle={{ flexGrow: 1 }}
         ListFooterComponent={renderFooter()}
       />
-      {renderDropdown()}
+
+      <SearchHeader />
+
     </>
   );
 }
@@ -119,7 +115,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  {loadNextPage},
-)(SearchScreen);
+export default connect(mapStateToProps, { loadNextPage })(SearchScreen);
