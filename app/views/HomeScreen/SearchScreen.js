@@ -15,6 +15,7 @@ import NoContentFiller from '../../components/NoContentFiller';
 import { COLORS } from '../../config';
 import { getWordEnding } from '../../utils';
 import { loadNextPage } from '../../modules/search';
+import LastSearched from './history/LastSearched';
 
 function SearchScreen(props) {
 
@@ -22,10 +23,19 @@ function SearchScreen(props) {
   const { items, isLoading, count, value } = props;
   const { loadNextPage, isLoadingNextPage } = props;
   const { location, locationError, isTrackingLocation } = props;
+  const { history: searchHistory } = props;
+
+  // console.log(searchHistory)
+
+  
 
   const renderHeader = () => {
     if (!count) return null;
-    const text = `Найдено ${count} ${getWordEnding(count, [
+    const text = `${getWordEnding(count, [
+      'Найден',
+      'Найдено',
+      'Найдено',
+    ])} ${count} ${getWordEnding(count, [
       'результат',
       'результата',
       'результатов',
@@ -74,8 +84,8 @@ function SearchScreen(props) {
 
   return (
     <>
+      <View style={{paddingTop: 75}}>
       <FlatList
-        style={{ transform: [{ translateY: 75 }] }}
         data={items}
         keyExtractor={(item, index) => index.toString()}
         renderItem={renderItem}
@@ -92,14 +102,23 @@ function SearchScreen(props) {
         initialNumToRender={10}
         ListEmptyComponent={
           value && !isLoading && (
-            <NoContentFiller
-              text={`По запросу '${value}'\nничего не найдено :(`}
-            />
+            <View style={{flex: 1}}>
+              <View>
+                <NoContentFiller
+                  text={`По запросу '${value}'\nничего не найдено :(`}
+                />
+              </View>
+
+              <LastSearched />
+
+            </View>
           )
         }
         contentContainerStyle={{ flexGrow: 1 }}
         ListFooterComponent={renderFooter()}
       />
+
+      </View>
 
       <SearchHeader />
 

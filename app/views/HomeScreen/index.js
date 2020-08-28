@@ -7,6 +7,7 @@ import SearchScreen from './SearchScreen'
 import FilterScreen from './FilterScreen';
 import PharmacyScreen from "../PharmacyScreen";
 import {getLocation} from "../../modules/location";
+import SearchHistory from './history/SearchHistory';
 
 const Stack = createStackNavigator();
 
@@ -41,6 +42,7 @@ function HomeScreen(props) {
           ({ route }) => ({ title: route.params.title })
         }
       />
+      <Stack.Screen name="SearchHistory" component={SearchHistory} options={{title: 'История поиска'}}/>
     </Stack.Navigator>
   );
 }

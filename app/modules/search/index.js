@@ -1,12 +1,15 @@
 import api from '../../services/api';
 
 const SET_SEARCH_PHARM = 'search/SELECT_PHARM';
-const FETCH_SEARCH_ITEMS = 'search/FETCH_ITEMS';
+export const FETCH_SEARCH_ITEMS = 'search/FETCH_ITEMS';
 const IS_LOADING_ITEMS = 'search/IS_LOADING_ITEMS';
 const IS_LOADING_NEXT_PAGE = 'search/IS_LOADING_NEXT_PAGE';
 const LOAD_NEXT_PAGE = 'search/LOAD_NEXT_PAGE';
 const MULTI_SEARCH = 'search/MULTI_SEARCH';
 const START_MULTI_SEARCHING = 'search/START_MULTI_SEARCHING';
+export const LOG_SEARCH_RESULT = "search/LOG_RESULT";
+const REMOVE_HISTORY_ITEM = "search/REMOVE_HISTORY_ITEM";
+const CLEAR_SEARCH_HISTORY = "search/CLEAR_HISTORY";
 
 const initialState = {
   fetchedItems: [],
@@ -19,7 +22,7 @@ const initialState = {
   multiSearchItems: [],
   multiSearchValue: '',
   isMultiSearching: false,
-  // history: TODO
+  history: []
 };
 
 // Reducer
@@ -75,6 +78,24 @@ export default function reducer(state = initialState, action) {
         isMultiSearching: true,
       };
 
+    case LOG_SEARCH_RESULT:
+      return {
+        ...state,
+        history: [action.payload, ...state.history],
+      };
+
+    case REMOVE_HISTORY_ITEM:
+      return {
+        ...state,
+        history: state.history.filter(item => item.id !== action.itemToRemove.id),
+      };
+
+    case CLEAR_SEARCH_HISTORY:
+      return {
+        ...state,
+        history: [],
+      };
+
     default:
       return state;
   }
@@ -82,24 +103,24 @@ export default function reducer(state = initialState, action) {
 
 // Action craeators
 export const multiSearch = value => async (dispatch, getState) => {
-  dispatch({type: START_MULTI_SEARCHING});
+  dispatch({ type: START_MULTI_SEARCHING });
 
   if (value.length > 2) {
     var response = await api.get(
       `/multi-search/?format=json&name=${value}&region=1`,
     );
-    dispatch({type: MULTI_SEARCH, results: response.data.slice(0, 7)});
+    dispatch({ type: MULTI_SEARCH, results: response.data.slice(0, 7) });
   } else if (!value) {
-    dispatch({type: MULTI_SEARCH, results: []});
+    dispatch({ type: MULTI_SEARCH, results: [] });
   }
 };
 
 export const searchResults = value => async (dispatch, getState) => {
   // GET params
-  const {selectedPharm} = getState().search;
+  const { selectedPharm } = getState().search;
   const pharmId = (selectedPharm && selectedPharm.id) || '';
 
-  dispatch({type: IS_LOADING_ITEMS, isLoading: true, value});
+  dispatch({ type: IS_LOADING_ITEMS, isLoading: true, value });
   const response = await api.get(`/search/?format=json&name=${value}`, {
     params: {
       order_type: '-add_date',
@@ -109,18 +130,18 @@ export const searchResults = value => async (dispatch, getState) => {
     },
   });
 
-  dispatch({type: FETCH_SEARCH_ITEMS, payload: {...response.data, value}});
+  dispatch({ type: FETCH_SEARCH_ITEMS, payload: { ...response.data, value } });
 };
 
 export const loadNextPage = () => async (dispatch, getState) => {
-  const {nextPage: nextPageURL, isLoadingNextPage} = getState().search;
+  const { nextPage: nextPageURL, isLoadingNextPage } = getState().search;
   if (!nextPageURL || isLoadingNextPage) return;
 
-  dispatch({type: IS_LOADING_NEXT_PAGE, isLoading: true});
+  dispatch({ type: IS_LOADING_NEXT_PAGE, isLoading: true });
 
   const response = await api.get(nextPageURL);
 
-  dispatch({type: LOAD_NEXT_PAGE, payload: response.data});
+  dispatch({ type: LOAD_NEXT_PAGE, payload: response.data });
 };
 
 export const setSearchPharm = (pharm, navigation) => async (
@@ -131,21 +152,27 @@ export const setSearchPharm = (pharm, navigation) => async (
     navigation.navigate('Search');
   }
 
-  dispatch({type: SET_SEARCH_PHARM, pharm});
+  dispatch({ type: SET_SEARCH_PHARM, pharm });
 
   // refresh results with selected pharm
-  const {value} = getState().search;
+  const { value } = getState().search;
   if (value.length > 2) {
     dispatch(searchResults(value));
   }
 };
 
 export const clearSearchPharm = () => (dispatch, getState) => {
-  dispatch({type: SET_SEARCH_PHARM, pharm: null});
+  dispatch({ type: SET_SEARCH_PHARM, pharm: null });
 
   // refresh results without selected pharn
-  const {value} = getState().search;
+  const { value } = getState().search;
   if (value.length > 2) {
     dispatch(searchResults(value));
   }
 };
+
+export const logResult = (newHistoryItem) => ({ type: LOG_SEARCH_RESULT, payload: newHistoryItem });
+
+export const removeHistoryItem = (itemToRemove) => ({ type: REMOVE_HISTORY_ITEM, itemToRemove });
+
+export const clearSearchHistory = () => ({ type: CLEAR_SEARCH_HISTORY });

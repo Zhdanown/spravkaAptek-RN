@@ -1,8 +1,11 @@
 import { createStore, applyMiddleware } from "redux";
-import rootReducer from "./rootReducer";
-import thunk from "redux-thunk"
+import thunk from "redux-thunk";
 
-const middleware = [thunk]
+import rootReducer from "./rootReducer";
+import logSearchHistory from './middleware/logSearchHistory';
+
+
+const middleware = [thunk, logSearchHistory]
 
 const store = createStore(rootReducer, applyMiddleware(...middleware));
 
