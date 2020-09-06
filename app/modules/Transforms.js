@@ -5,7 +5,7 @@ const DateTransform = createTransform(
   (inboundState, key) => inboundState,
   // state to be rehydrated
   (outboundState, key) => {
-    console.log('rehydrated state: ', outboundState, key)
+    // console.log('rehydrated state: ', outboundState, key)
     return {...outboundState, 
       history: outboundState.history.map(item => {
         return {

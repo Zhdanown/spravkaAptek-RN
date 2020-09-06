@@ -14,6 +14,7 @@ import PharmaciesScreen from './views/PharmaciesScreen';
 import ReferenceScreen from "./views/ReferenceScreen";
 import { COLORS } from './config';
 
+import ignoreWarnings from './config/ignoreWarnings';
 
 const Tab = createBottomTabNavigator();
 
@@ -30,8 +31,6 @@ function App() {
 
                 if (route.name === 'Home') {
                   iconName = 'magnify';
-                } else if (route.name === 'Filter') {
-                  iconName = 'filter';
                 } else if (route.name === 'Pharmacies') {
                   iconName = 'store';
                 } else if ("Reference") {

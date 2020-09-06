@@ -68,7 +68,7 @@ const SearchHeader = (props) => {
           paddingVertical: 8,
           paddingHorizontal: 12,
         }}>
-        <IconButton onPress={() => navigation.navigate('Filter')}>
+        <IconButton onPress={() => navigation.navigate('SearchSettings')}>
           <Icon name="filter-variant" size={30} color={COLORS.PRIMARY} />
         </IconButton>
       </View>

@@ -7,9 +7,9 @@ const IS_LOADING_NEXT_PAGE = 'search/IS_LOADING_NEXT_PAGE';
 const LOAD_NEXT_PAGE = 'search/LOAD_NEXT_PAGE';
 const MULTI_SEARCH = 'search/MULTI_SEARCH';
 const START_MULTI_SEARCHING = 'search/START_MULTI_SEARCHING';
-export const LOG_SEARCH_RESULT = "search/LOG_RESULT";
-const REMOVE_HISTORY_ITEM = "search/REMOVE_HISTORY_ITEM";
-const CLEAR_SEARCH_HISTORY = "search/CLEAR_HISTORY";
+export const LOG_SEARCH_RESULT = 'search/LOG_RESULT';
+const REMOVE_HISTORY_ITEM = 'search/REMOVE_HISTORY_ITEM';
+const CLEAR_SEARCH_HISTORY = 'search/CLEAR_HISTORY';
 
 const initialState = {
   fetchedItems: [],
@@ -22,7 +22,7 @@ const initialState = {
   multiSearchItems: [],
   multiSearchValue: '',
   isMultiSearching: false,
-  history: []
+  history: [],
 };
 
 // Reducer
@@ -87,7 +87,9 @@ export default function reducer(state = initialState, action) {
     case REMOVE_HISTORY_ITEM:
       return {
         ...state,
-        history: state.history.filter(item => item.id !== action.itemToRemove.id),
+        history: state.history.filter(
+          item => item.id !== action.itemToRemove.id,
+        ),
       };
 
     case CLEAR_SEARCH_HISTORY:
@@ -117,18 +119,34 @@ export const multiSearch = value => async (dispatch, getState) => {
 
 export const searchResults = value => async (dispatch, getState) => {
   // GET params
-  const { selectedPharm } = getState().search;
+  const state = getState();
+  const { settings, search, location } = state;
+  const { selectedPharm } = search;
+  const { selectedRegion, selectedTown, distance, selectedOrder } = settings;
+  const { location: userPosition } = location;
+  const { latitude, longitude } = userPosition;
+
   const pharmId = (selectedPharm && selectedPharm.id) || '';
+  const townId = (selectedTown && selectedTown.id) || '';
+  const regionId = (selectedRegion && selectedRegion.id) || '';
 
   dispatch({ type: IS_LOADING_ITEMS, isLoading: true, value });
-  const response = await api.get(`/search/?format=json&name=${value}`, {
-    params: {
-      order_type: '-add_date',
-      page: 1,
-      price_list__pharmacy__town__region: 1,
-      price_list__pharmacy: pharmId,
-    },
-  });
+  
+  try {
+    var response = await api.get(`/search/?format=json&name=${value}`, {
+      params: {
+        order_type: selectedOrder.value,
+        page: 1,
+        price_list__pharmacy: pharmId,
+        price_list__pharmacy__town: townId,
+        price_list__pharmacy__town__region: regionId,
+        ...(distance && userPosition && { distance, user_position: `${latitude},${longitude}` }),
+      },
+    });
+    
+  } catch (error) {
+    console.log(error)
+  }
 
   dispatch({ type: FETCH_SEARCH_ITEMS, payload: { ...response.data, value } });
 };
@@ -171,8 +189,14 @@ export const clearSearchPharm = () => (dispatch, getState) => {
   }
 };
 
-export const logResult = (newHistoryItem) => ({ type: LOG_SEARCH_RESULT, payload: newHistoryItem });
+export const logResult = newHistoryItem => ({
+  type: LOG_SEARCH_RESULT,
+  payload: newHistoryItem,
+});
 
-export const removeHistoryItem = (itemToRemove) => ({ type: REMOVE_HISTORY_ITEM, itemToRemove });
+export const removeHistoryItem = itemToRemove => ({
+  type: REMOVE_HISTORY_ITEM,
+  itemToRemove,
+});
 
 export const clearSearchHistory = () => ({ type: CLEAR_SEARCH_HISTORY });

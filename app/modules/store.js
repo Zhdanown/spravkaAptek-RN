@@ -19,6 +19,8 @@ const store = createStore(persistedReducer, applyMiddleware(...middleware));
 
 let persistor = persistStore(store);
 
+persistor.purge();
+
 export {
   store, persistor
 };

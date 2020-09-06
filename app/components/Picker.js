@@ -15,7 +15,7 @@ const Picker = ({options = [], onChange = () => {}}) => {
     // PickerIOS for iOS
     <_Picker
       selectedValue={value}
-      style={{height: 30, width: 200, color: COLORS.PRIMARY}}
+      // style={{height: 30, width: 200, color: COLORS.PRIMARY}}
       onValueChange={(itemValue, itemIndex) => setValue(itemValue)}>
       {options.map(option => (
         <_Picker.Item key={option.id} label={option.label} value={option.value} />
