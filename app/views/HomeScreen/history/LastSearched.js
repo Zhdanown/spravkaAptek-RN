@@ -8,7 +8,7 @@ import HistoryItem from './HistoryItem';
 import CenteredButton from '../../../components/CenteredButton';
 import NoContentFiller from '../../../components/NoContentFiller';
 import { COLORS } from '../../../config';
-import { searchResults } from '../../../modules/search';
+import { searchResults, removeHistoryItem } from '../../../modules/search';
 
 export default function LastSearched() {
   // show last 7 search Results
@@ -34,6 +34,7 @@ export default function LastSearched() {
           key={item.id}
           item={item}
           onPress={value => dispatch(searchResults(value))}
+          onDelete={item => dispatch(removeHistoryItem(item))}
         />
       ))}
       {searchHistory.length > 7 && <Ellipsis />}

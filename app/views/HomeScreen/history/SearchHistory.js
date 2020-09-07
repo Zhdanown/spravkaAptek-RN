@@ -80,7 +80,7 @@ export default function SearchHistory() {
         renderSectionHeader={({ section: { title } }) => (
           <Text
             style={{
-              fontSize: 24,
+              fontSize: 22,
               paddingTop: 10,
               color: COLORS.FADED,
             }}>

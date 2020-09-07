@@ -4,10 +4,11 @@ import {
   Text,
   View,
   ScrollView,
-  Button,
   TouchableOpacity,
   Alert,
 } from 'react-native';
+
+import { Button } from 'react-native-elements';
 
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -113,17 +114,13 @@ const SearchSettingsScreen = props => {
       {/* Filter items */}
       <ScrollView style={styles.items}>
         {/* "Apply filters" button */}
-        <View
-          style={{
-            margin: 10,
-            backgroundColor: COLORS.PRIMARY,
-            borderColor: COLORS.PRIMARY,
-            borderWidth: 1,
-            borderRadius: 8,
-          }}>
+        <View style={{ margin: 10 }}>
           <Button
             title="Применить"
-            color={'white'}
+            buttonStyle={{
+              borderRadius: 8,
+              backgroundColor: COLORS.PRIMARY,
+            }}
             onPress={applySettings}
             accessibilityLabel="Применить выбранные фильтры"
           />
@@ -220,7 +217,6 @@ const SearchSettingsScreen = props => {
           onPress={() => restoreDefaults()}
           title="Восстановить по умолчанию"
         />
-
       </ScrollView>
     </View>
   );
