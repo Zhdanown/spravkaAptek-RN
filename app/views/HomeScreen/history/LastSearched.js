@@ -34,7 +34,6 @@ export default function LastSearched() {
           key={item.id}
           item={item}
           onPress={value => dispatch(searchResults(value))}
-          deletable={false}
         />
       ))}
       {searchHistory.length > 7 && <Ellipsis />}

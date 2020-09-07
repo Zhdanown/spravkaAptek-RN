@@ -21,11 +21,21 @@ export function dateToString (date, format = 'www - dd mmmm yyyy hh:mm') {
   minute = `0${minute}`.substr(-2);
   second = `0${second}`.substr(-2);
 
+  let weekDayName = weekDaysLong[weekday];
+
   switch (format) {
     case 'www - dd mmmm yyyy hh:mm':
-      const weekDayName = weekDaysLong[weekday];
       return `${weekDayName} - ${day} ${months[month - 1]} ${year}, ${hour}:${minute}`;
-  
+
+    case 'ww - dd mmmm yyyy':
+      return `${weekDayName} - ${day} ${months[month - 1]} ${year}`;
+     
+    case 'dd.mmm.yyyy hh:mm':
+      return `${day} ${months[month - 1]} ${year}, ${hour}:${minute}`;
+
+    case 'hh:mm':
+      return `${hour}:${minute}`;
+      
     default: // dd.mm.yy hh:mm'
       year = `${year}`.substr(-2);
       return `${day}.${month}.${year} ${hour}:${minute}`;

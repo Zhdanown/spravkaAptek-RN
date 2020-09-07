@@ -1,51 +1,47 @@
-import React from 'react'
+import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import IconButton from "../../../components/IconButton";
+import IconButton from '../../../components/IconButton';
 import { COLORS } from '../../../config';
-import { dateToString } from "../../../utils";
+import { dateToString } from '../../../utils';
 
-export default function HistoryItem({ item, onPress, onDelete, deletable }) {
-
-  const date = dateToString(item.date)
+export default function HistoryItem({ item, onPress, onDelete }) {
+  const date = dateToString(item.date, 'dd.mmm.yyyy hh:mm');
 
   return (
-    <View style={{
-      marginVertical: 5,
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-    }}>
-      <TouchableOpacity onPress={() => onPress(item.value)} style={{ flex: 1 }}>
-
-        <View style={{
-          flex: 1,
-          padding: 10,
+    <TouchableOpacity onPress={() => onPress(item.value)} style={{ flex: 1 }}>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
           backgroundColor: 'white',
+          marginVertical: 5,
+          padding: 10,
           borderRadius: 8,
         }}>
-          <Text style={{
-            color: COLORS.PRIMARY,
-            fontSize: 16,
-          }}>{item.value} ({item.count})</Text>
+        <View
+          style={{
+            flex: 1,
+          }}>
+          <Text
+            style={{
+              color: COLORS.PRIMARY,
+              fontSize: 16,
+            }}>
+            {item.value} ({item.count})
+          </Text>
           <Text style={{ color: COLORS.FADED, marginTop: 5 }}>{date}</Text>
         </View>
-      </TouchableOpacity>
 
-      {deletable && (
-        <IconButton onPress={() => onDelete(item)} style={{ padding: 10, marginLeft: 10 }}>
-          <Icon name="delete-outline" size={30} color="firebrick" />
+        <IconButton
+          onPress={() => onDelete(item)}
+          style={{ padding: 5, marginLeft: 10 }}>
+          <Icon name="close" size={30} color={COLORS.DANGER} />
         </IconButton>
-
-      )}
-    </View>
+      </View>
+    </TouchableOpacity>
   );
-
 }
-
-HistoryItem.defaultProps = {
-  deletable: true,
-}
-
