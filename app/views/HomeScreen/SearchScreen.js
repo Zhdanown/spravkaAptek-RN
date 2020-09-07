@@ -11,23 +11,17 @@ import { connect } from 'react-redux';
 
 import SearchHeader from './SearchHeader';
 import ItemCard from './ItemCard';
+import LastSearched from './history/LastSearched';
 import NoContentFiller from '../../components/NoContentFiller';
 import { COLORS } from '../../config';
 import { getWordEnding } from '../../utils';
 import { loadNextPage } from '../../modules/search';
-import LastSearched from './history/LastSearched';
 
 function SearchScreen(props) {
-
   const { navigation } = props;
   const { items, isLoading, count, value } = props;
   const { loadNextPage, isLoadingNextPage } = props;
   const { location, locationError, isTrackingLocation } = props;
-  const { history: searchHistory } = props;
-
-  // console.log(searchHistory)
-
-  
 
   const renderHeader = () => {
     if (!count) return null;
@@ -70,6 +64,25 @@ function SearchScreen(props) {
     );
   };
 
+  const renderEmpty = () => {
+    return (
+      <View style={{ flex: 1 }}>
+        {!!value && !isLoading && (
+          <View style={{ flexGrow: 0 }}>
+            <NoContentFiller
+              text={`По запросу '${value}'\nничего не найдено :(`}
+            />
+          </View>
+        )}
+        {!isLoading && (
+          <View style={{ flex: 1 }}>
+            <LastSearched />
+          </View>
+        )}
+      </View>
+    );
+  };
+
   const renderFooter = () => {
     if (!isLoadingNextPage) return null;
     return (
@@ -84,44 +97,25 @@ function SearchScreen(props) {
 
   return (
     <>
-      <View style={{paddingTop: 75}}>
-      <FlatList
-        data={items}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={renderItem}
-        refreshControl={
-          <RefreshControl
-            colors={[COLORS.PRIMARY]}
-            refreshing={isLoading}
-          // onRefresh={loadResults}
-          />
-        }
-        ListHeaderComponent={renderHeader}
-        onEndReached={loadNextPage}
-        onEndReachedThreshold={0.5}
-        initialNumToRender={10}
-        ListEmptyComponent={
-          value && !isLoading && (
-            <View style={{flex: 1}}>
-              <View>
-                <NoContentFiller
-                  text={`По запросу '${value}'\nничего не найдено :(`}
-                />
-              </View>
-
-              <LastSearched />
-
-            </View>
-          )
-        }
-        contentContainerStyle={{ flexGrow: 1 }}
-        ListFooterComponent={renderFooter()}
-      />
-
+      <View style={{ paddingTop: 75, flex: 1 }}>
+        <FlatList
+          data={items}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={renderItem}
+          refreshControl={
+            <RefreshControl colors={[COLORS.PRIMARY]} refreshing={isLoading} />
+          }
+          ListHeaderComponent={renderHeader}
+          onEndReached={loadNextPage}
+          onEndReachedThreshold={0.5}
+          initialNumToRender={10}
+          ListEmptyComponent={renderEmpty}
+          contentContainerStyle={{ flexGrow: 1 }}
+          ListFooterComponent={renderFooter()}
+        />
       </View>
 
       <SearchHeader />
-
     </>
   );
 }
@@ -134,4 +128,7 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { loadNextPage })(SearchScreen);
+export default connect(
+  mapStateToProps,
+  { loadNextPage },
+)(SearchScreen);

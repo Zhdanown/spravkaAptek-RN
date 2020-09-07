@@ -1,12 +1,16 @@
-import React from 'react'
+import React from 'react';
 import { View, Text, FlatList } from 'react-native';
 
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch } from 'react-redux';
 
-import HistoryItem from "./HistoryItem";
-import NoContentFiller from "../../../components/NoContentFiller";
-import BorderlessButton from "../../../components/BorderlessButton";
-import { searchResults, removeHistoryItem, clearSearchHistory } from "../../../modules/search";
+import HistoryItem from './HistoryItem';
+import NoContentFiller from '../../../components/NoContentFiller';
+import BorderlessButton from '../../../components/BorderlessButton';
+import {
+  searchResults,
+  removeHistoryItem,
+  clearSearchHistory,
+} from '../../../modules/search';
 
 export default function SearchHistory() {
   const dispatch = useDispatch();
@@ -15,7 +19,12 @@ export default function SearchHistory() {
   return (
     // TODO SectionList
     <View style={{ margin: 10, flex: 1 }}>
-      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'flex-end',
+        }}>
         {/* <Text style={{ fontSize: 20 }}>История поиска</Text> */}
         {searchHistory.length ? (
           <BorderlessButton
@@ -28,11 +37,15 @@ export default function SearchHistory() {
         data={searchHistory}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => (
-          <HistoryItem item={item} onPress={() => dispatch(searchResults(value))} onDelete={item => dispatch(removeHistoryItem(item))} />
+          <HistoryItem
+            item={item}
+            onPress={() => dispatch(searchResults(value))}
+            onDelete={item => dispatch(removeHistoryItem(item))}
+          />
         )}
-        ListEmptyComponent={<NoContentFiller text={'История поиска пуста...'} />}
+        ListEmptyComponent={<NoContentFiller text={'История поиска пуста'} />}
         contentContainerStyle={{ flexGrow: 1 }}
       />
     </View>
-  )
+  );
 }

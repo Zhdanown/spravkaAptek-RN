@@ -1,36 +1,61 @@
-import React from 'react'
-import { View, Text, TouchableOpacity } from 'react-native';
+import React from 'react';
+import { View, Text } from 'react-native';
 
-import { useSelector, useDispatch } from "react-redux";
-import { useNavigation } from "@react-navigation/native";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
 
-import HistoryItem from "./HistoryItem";
-import IconButton from "../../../components/IconButton";
-import BorderlessButton from '../../../components/BorderlessButton';
-import {searchResults} from "../../../modules/search"
+import HistoryItem from './HistoryItem';
+import CenteredButton from '../../../components/CenteredButton';
+import NoContentFiller from '../../../components/NoContentFiller';
+import { COLORS } from '../../../config';
+import { searchResults } from '../../../modules/search';
 
 export default function LastSearched() {
-  // show last 5 search Results
+  // show last 7 search Results
 
   const dispatch = useDispatch();
   const searchHistory = useSelector(state => state.search.history);
   const navigation = useNavigation();
 
-
   return (
-    <View style={{ margin: 10 }}>
-      {/* <Text>Последние результаты</Text> */}
-      {searchHistory.slice(0, 5).map(item => (
-        <HistoryItem key={item.id} item={item} onPress={(value) => dispatch(searchResults(value))} deletable={false} />
-      ))}
-      {searchHistory.length > 5 && <Ellipsis />}
+    <View
+      style={[
+        { margin: 10 },
+        !searchHistory.length && { flex: 1, justifyContent: 'center' },
+      ]}>
+      {!searchHistory.length && (
+        <View>
+          <NoContentFiller text="История поиска пуста" />
+        </View>
+      )}
 
-      <BorderlessButton onPress={() => navigation.navigate("SearchHistory")} title="История поиска" />
+      {searchHistory.slice(0, 7).map(item => (
+        <HistoryItem
+          key={item.id}
+          item={item}
+          onPress={value => dispatch(searchResults(value))}
+          deletable={false}
+        />
+      ))}
+      {searchHistory.length > 7 && <Ellipsis />}
+
+      <CenteredButton
+        onPress={() => navigation.navigate('SearchHistory')}
+        title="Перейти к истории"
+      />
     </View>
-  )
+  );
 }
 
 const Ellipsis = () => (
-  <Text style={{ margin: 10, flex: 1, textAlign: 'center' }}>. . .</Text>
-)
+  <Text
+    style={{
+      margin: 10,
+      flex: 1,
+      textAlign: 'center',
+      fontSize: 25,
+      color: COLORS.FADED,
+    }}>
+    . . .
+  </Text>
+);
