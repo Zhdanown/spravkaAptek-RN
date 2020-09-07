@@ -1,16 +1,16 @@
 import React from 'react';
-import {View, Text, ScrollView, StyleSheet} from 'react-native';
+import { View, Text, ScrollView, StyleSheet } from 'react-native';
+
 import Axios from 'axios';
-import {API_URL} from '../../config';
+import { connect } from 'react-redux';
+
+import CenteredButton from '../../components/CenteredButton';
 import ImageSlider from '../../components/ImageSlider';
 import ImageBlank from '../../components/ImageBlank';
-import BorderlessButton from '../../components/BorderlessButton';
-import {COLORS} from '../../config';
+import { COLORS, API_URL } from '../../config';
+import { searchResults } from '../../modules/search';
 
-import {connect} from 'react-redux';
-import {searchResults} from '../../modules/search';
-
-function Row({label, value}) {
+function Row({ label, value }) {
   return (
     <View style={[styles.row, styles.section]}>
       <Text style={styles.text}>{label}:</Text>
@@ -19,8 +19,8 @@ function Row({label, value}) {
   );
 }
 
-function Product({navigation, route, searchResults}) {
-  const {product} = route.params;
+function Product({ navigation, route, searchResults }) {
+  const { product } = route.params;
   const {
     id: productId,
     country,
@@ -53,7 +53,7 @@ function Product({navigation, route, searchResults}) {
   };
 
   const openManual = () => {
-    navigation.navigate('ProductManual', {title: full_name, manual});
+    navigation.navigate('ProductManual', { title: full_name, manual });
   };
 
   return (
@@ -73,14 +73,12 @@ function Product({navigation, route, searchResults}) {
         }}>
         {full_name}
       </Text>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'center',
-          marginVertical: 10,
-        }}>
-        <BorderlessButton onPress={search} title="Искать в аптеках" />
-      </View>
+
+      <CenteredButton
+        onPress={search}
+        title="Искать в аптеках"
+        style={{ marginVertical: 10 }}
+      />
 
       <View style={styles.container}>
         <Row label="Группа" value={group} />
@@ -94,14 +92,11 @@ function Product({navigation, route, searchResults}) {
       </View>
 
       {manual && (
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            marginVertical: 10,
-          }}>
-          <BorderlessButton onPress={openManual} title="Инструкция" />
-        </View>
+        <CenteredButton
+          onPress={openManual}
+          title="Инструкция"
+          style={{ marginVertical: 10 }}
+        />
       )}
     </ScrollView>
   );
@@ -109,7 +104,7 @@ function Product({navigation, route, searchResults}) {
 
 export default connect(
   null,
-  {searchResults},
+  { searchResults },
 )(Product);
 
 const styles = StyleSheet.create({

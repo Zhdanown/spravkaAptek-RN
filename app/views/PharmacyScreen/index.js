@@ -2,22 +2,16 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { setSearchPharm } from '../../modules/search';
 
-import {
-  View,
-  Text,
-  ScrollView,
-  StyleSheet,
-  Animated,
-} from 'react-native';
+import { View, Text, ScrollView, StyleSheet, Animated } from 'react-native';
 import { useWindowDimensions } from 'react-native';
 
-import Map from '../../components/Map';
-import NoContentFiller from '../../components/NoContentFiller';
-import BorderlessButton from '../../components/BorderlessButton';
-import PharmContacts from "./PharmContacts";
+import PharmContacts from './PharmContacts';
 import PharmSchedule from './PharmSchedule';
-import PharmLocation from "./PharmLocation";
+import PharmLocation from './PharmLocation';
 import PharmPhotos from './PharmPhotos';
+import Map from '../../components/Map';
+import CenteredButton from '../../components/CenteredButton';
+import NoContentFiller from '../../components/NoContentFiller';
 
 import { COLORS } from '../../config';
 
@@ -45,7 +39,7 @@ function PharmacyScreen({ navigation, route, setSearchPharm, ...props }) {
     is_work_now: isOpenNow,
     schedule: { name: schedule },
     contacts,
-    pharmacy_photos
+    pharmacy_photos,
   } = pharmacy;
 
   const { drugName, country, price, quantity } = drug;
@@ -55,7 +49,10 @@ function PharmacyScreen({ navigation, route, setSearchPharm, ...props }) {
   const renderDrugInfo = () => {
     return (
       <View
-        style={[styles.section, { borderColor: COLORS.PRIMARY, borderWidth: 1 }]}>
+        style={[
+          styles.section,
+          { borderColor: COLORS.PRIMARY, borderWidth: 1 },
+        ]}>
         <Text style={{ fontSize: 16 }}>
           {drugName} ({country})
         </Text>
@@ -79,39 +76,31 @@ function PharmacyScreen({ navigation, route, setSearchPharm, ...props }) {
           />
         </View>
 
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-          }}>
-          <BorderlessButton
-            onPress={() => getRoute(latitude, longitude)}
-            title="Проложить маршрут"
-          />
-        </View>
+        <CenteredButton
+          onPress={() => getRoute(latitude, longitude)}
+          title="Проложить маршрут"
+        />
 
         <View style={{ padding: 10 }}>
-
           {renderDrugInfo()}
 
           {/* Pharmacy Info */}
           <Text style={styles.pharmacyName}>{name}</Text>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'center',
-            }}>
-            <BorderlessButton
-              onPress={() => setSearchPharm(pharmacy, navigation)}
-              title="Искать в этой аптеке"
-            />
-          </View>
 
-          <PharmLocation address={address} location={location} distance={distance} isTrackingLocation={isTrackingLocation} />
+          <CenteredButton
+            onPress={() => setSearchPharm(pharmacy, navigation)}
+            title="Искать в этой аптеке"
+          />
+
+          <PharmLocation
+            address={address}
+            location={location}
+            distance={distance}
+            isTrackingLocation={isTrackingLocation}
+          />
           <PharmSchedule schedule={schedule} isOpenNow={isOpenNow} />
           <PharmContacts contacts={contacts} />
           <PharmPhotos pharmacyPhotos={pharmacy_photos} />
-
         </View>
       </ScrollView>
     </View>
@@ -143,7 +132,7 @@ const styles = StyleSheet.create({
     shadowColor: '#ccc',
     shadowOffset: { width: 1, height: 1 },
     shadowRadius: 4,
-    shadowOpacity: .5,
+    shadowOpacity: 0.5,
   },
   pharmacyName: {
     flex: 1,

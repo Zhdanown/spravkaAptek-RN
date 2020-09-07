@@ -8,12 +8,12 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import { connect } from 'react-redux';
 
+import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Slider from '@react-native-community/slider';
 
-import BorderlessButton from '../../../components/BorderlessButton';
+import CenteredButton from '../../../components/CenteredButton';
 import { COLORS } from '../../../config';
 import * as actions from '../../../modules/settings';
 
@@ -215,16 +215,12 @@ const SearchSettingsScreen = props => {
             </Text>
           )}
         </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-          }}>
-          <BorderlessButton
-            onPress={() => restoreDefaults()}
-            title="Восстановить по умолчанию"
-          />
-        </View>
+
+        <CenteredButton
+          onPress={() => restoreDefaults()}
+          title="Восстановить по умолчанию"
+        />
+
       </ScrollView>
     </View>
   );
