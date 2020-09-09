@@ -1,22 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  ScrollView,
-  TouchableOpacity,
-  Alert,
-} from 'react-native';
-
-import { Button } from 'react-native-elements';
+import { StyleSheet, View, ScrollView, Alert } from 'react-native';
 
 import { connect } from 'react-redux';
+import { Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Slider from '@react-native-community/slider';
 
+import HelperText from './HelperText';
 import CenteredButton from '../../../components/CenteredButton';
 import { COLORS } from '../../../config';
 import * as actions from '../../../modules/settings';
+import SettingsItem from './SettingsItem';
 
 const rangeValues = [0, 1, 2, 3, 5, 8, 13, 21, 33, 54];
 
@@ -111,38 +105,23 @@ const SearchSettingsScreen = props => {
 
   return (
     <View style={styles.container}>
-      {/* Filter items */}
-      <ScrollView style={styles.items}>
-        {/* "Apply filters" button */}
-        <View style={{ margin: 10 }}>
-          <Button
-            title="Применить"
-            buttonStyle={{
-              borderRadius: 8,
-              backgroundColor: COLORS.PRIMARY,
-            }}
-            onPress={applySettings}
-            accessibilityLabel="Применить выбранные фильтры"
-          />
-        </View>
+      <ScrollView>
 
-        <TouchableOpacity
+        <SettingsItem
+          title="Регион"
+          selectedValue={(region && region.name) || 'Не выбрано'}
           onPress={() =>
             navigation.navigate('SettingsOptionList', {
               title: 'Регион',
               options: props.regions,
               onItemSelect: item => setRegion(item),
             })
-          }>
-          <View style={[styles.card, styles.oneLine]}>
-            <Text style={styles.itemLabel}>Регион</Text>
-            <Text style={styles.itemValue} numberOfLines={1}>
-              {(region && region.name) || 'Не выбрано'}
-            </Text>
-          </View>
-        </TouchableOpacity>
+          }
+        />
 
-        <TouchableOpacity
+        <SettingsItem
+          title="Населенный пункт"
+          selectedValue={(town && town.name) || 'Не выбрано'}
           disabled={!region}
           onPress={() =>
             navigation.navigate('SettingsOptionList', {
@@ -153,47 +132,31 @@ const SearchSettingsScreen = props => {
               onItemSelect: item => setTown(item),
             })
           }>
-          <View
-            style={[
-              styles.card,
-              styles.oneLine,
-              { opacity: region ? 1 : 0.5 },
-            ]}>
-            <Text style={styles.itemLabel}>Населённый пункт</Text>
-            <Text style={styles.itemValue} numberOfLines={1}>
-              {(town && town.name) || 'Не выбрано'}
-            </Text>
-          </View>
-        </TouchableOpacity>
+          {!region && <HelperText>Не выбран регион</HelperText>}
+        </SettingsItem>
 
-        <TouchableOpacity
+        <SettingsItem
+          title="Сортировка"
+          selectedValue={order && order.name}
           onPress={() =>
             navigation.navigate('SettingsOptionList', {
               title: 'Сортировка',
               options: props.orderOptions,
               onItemSelect: item => setOrder(item),
             })
+          }
+        />
+
+        <SettingsItem
+          title="Радиус поиска"
+          selectedValue={
+            location
+              ? (range && rangeValues[range] + 'км') || 'Не важно'
+              : 'Не доступно'
           }>
-          <View style={[styles.card, styles.oneLine]}>
-            <Text style={styles.itemLabel}>Сортировка</Text>
-            <Text style={styles.itemValue} numberOfLines={1}>
-              {order && order.name}
-            </Text>
-          </View>
-        </TouchableOpacity>
-
-        <View style={styles.card}>
-          <View style={[styles.oneLine, { marginBottom: 15 }]}>
-            <Text style={styles.itemLabel}>Радиус поиска</Text>
-            <Text style={styles.itemLabel}>
-              {location
-                ? (range && rangeValues[range] + 'км') || 'Не важно'
-                : 'Не доступно'}
-            </Text>
-          </View>
-
           {location ? (
             <Slider
+              style={{ marginTop: 10 }}
               value={range}
               onValueChange={setRange}
               minimumValue={0}
@@ -204,13 +167,26 @@ const SearchSettingsScreen = props => {
               thumbTintColor={COLORS.PRIMARY}
             />
           ) : (
-            <Text style={{ textAlign: 'center', color: COLORS.FADED }}>
+            <HelperText>
               <Icon name="location-off" size={15} />
               {isTrackingLocation
                 ? 'Определяем местоположение'
                 : 'Местоположение не определено'}
-            </Text>
+            </HelperText>
           )}
+        </SettingsItem>
+
+
+        <View style={{ margin: 10 }}>
+          <Button
+            title="Применить"
+            buttonStyle={{
+              borderRadius: 8,
+              backgroundColor: COLORS.PRIMARY,
+            }}
+            onPress={applySettings}
+            accessibilityLabel="Применить выбранные фильтры"
+          />
         </View>
 
         <CenteredButton
@@ -239,9 +215,6 @@ const styles = StyleSheet.create({
     flex: 1,
     marginVertical: 10,
   },
-  items: {
-    flex: 1,
-  },
   card: {
     backgroundColor: 'white',
     marginHorizontal: 10,
@@ -263,12 +236,5 @@ const styles = StyleSheet.create({
   itemLabel: {
     color: COLORS.FADED,
     fontSize: 16,
-  },
-  itemValue: {
-    fontSize: 16,
-    color: COLORS.PRIMARY,
-    flex: 1,
-    textAlign: 'right',
-    marginLeft: 5,
   },
 });
