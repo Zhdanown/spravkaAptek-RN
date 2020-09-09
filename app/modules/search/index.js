@@ -124,7 +124,7 @@ export const searchResults = value => async (dispatch, getState) => {
   const { selectedPharm } = search;
   const { selectedRegion, selectedTown, distance, selectedOrder } = settings;
   const { location: userPosition } = location;
-  const { latitude, longitude } = userPosition;
+  const { latitude, longitude } = userPosition || {};
 
   const pharmId = (selectedPharm && selectedPharm.id) || '';
   const townId = (selectedTown && selectedTown.id) || '';
