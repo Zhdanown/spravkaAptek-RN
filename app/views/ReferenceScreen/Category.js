@@ -1,33 +1,33 @@
-import React from 'react'
-import { FlatList, RefreshControl, View } from 'react-native';
-import ListItem from "./ListItem";
-import {COLORS} from "../../config";
-import Axios from "axios";
-import {API_URL} from "../../config";
+import React from 'react';
+import { FlatList, RefreshControl } from 'react-native';
 
-export default function Category({navigation, route}) {
-  const {category} = route.params;
-  const [products, setProducts] = React.useState([]);
-  const [isRefreshing, setIsRefreshing] = React.useState(false);
+import { useDispatch, useSelector } from 'react-redux';
 
-  const loadData = async () => {
-    setIsRefreshing(true)
-    const response = await Axios.get(
-      `${API_URL}drug-list/?category=${category.id}`,
-    );
-    setProducts(response.data.results);
-    setIsRefreshing(false);
-  }
+import ListItem from './ListItem';
+import NoContentFiller from '../../components/NoContentFiller';
+import { COLORS } from '../../config';
+import { loadProducts } from '../../modules/reference';
+
+export default function Category({ navigation, route }) {
+  const { category } = route.params;
+
+  const dispatch = useDispatch();
+  const products = useSelector(state => state.reference.products);
+  const isLoading = useSelector(state => state.reference.isLoadingProducts);
+  const error = useSelector(state => state.reference.productsError);
+
+  const renderEmpty = () =>
+    error && <NoContentFiller text="Не удалость загрузить данные :(" />;
 
   React.useEffect(() => {
-    loadData();
-  }, [])
+    dispatch(loadProducts(category.id));
+  }, []);
 
   return (
     <FlatList
       data={products}
       keyExtractor={item => item.id.toString()}
-      renderItem={({item}) => (
+      renderItem={({ item }) => (
         <ListItem
           item={item}
           renderTitle={() => item.full_name}
@@ -42,10 +42,12 @@ export default function Category({navigation, route}) {
       refreshControl={
         <RefreshControl
           colors={[COLORS.PRIMARY]}
-          refreshing={isRefreshing}
-          onRefresh={loadData}
+          refreshing={isLoading}
+          onRefresh={() => dispatch(loadProducts(category.id))}
         />
       }
+      ListEmptyComponent={renderEmpty}
+      contentContainerStyle={{ flexGrow: 1 }}
     />
-  )
+  );
 }

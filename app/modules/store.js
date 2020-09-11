@@ -1,26 +1,28 @@
-import { createStore, applyMiddleware } from "redux";
-import { persistStore, persistReducer } from "redux-persist";
-import AsyncStorage from "@react-native-community/async-storage";
-import thunk from "redux-thunk";
+import { createStore, applyMiddleware } from 'redux';
+import { persistStore, persistReducer } from 'redux-persist';
+import AsyncStorage from '@react-native-community/async-storage';
+import thunk from 'redux-thunk';
+import createSagaMiddleware from 'redux-saga';
 
-import rootReducer from "./rootReducer";
+import rootSaga from './rootSaga';
+import rootReducer from './rootReducer';
 import logSearchHistory from './middleware/logSearchHistory';
-import DateTransform from "./Transforms";
+import DateTransform from './Transforms';
 
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  transforms: [DateTransform]
+  transforms: [DateTransform],
 };
+
+const sagaMiddleware = createSagaMiddleware();
+const middleware = [sagaMiddleware, thunk, logSearchHistory];
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-const middleware = [thunk, logSearchHistory];
 const store = createStore(persistedReducer, applyMiddleware(...middleware));
 
+sagaMiddleware.run(rootSaga);
 let persistor = persistStore(store);
-
 // persistor.purge();
 
-export {
-  store, persistor
-};
+export { store, persistor };

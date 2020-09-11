@@ -1,34 +1,32 @@
 import React from 'react';
-import {RefreshControl} from 'react-native';
-import {FlatList} from 'react-native-gesture-handler';
+import { RefreshControl } from 'react-native';
+
+import { useSelector, useDispatch } from 'react-redux';
+import { FlatList } from 'react-native-gesture-handler';
+
 import ListItem from './ListItem';
-import {COLORS} from '../../config';
-import Axios from 'axios';
+import NoContentFiller from '../../components/NoContentFiller';
+import { COLORS } from '../../config';
+import { loadAllCategories } from '../../modules/reference';
 
-const GroupList = ({navigation}) => {
-  const [groups, setGroups] = React.useState([]);
-  const [isRefreshing, setIsRefreshing] = React.useState(false);
-
-  const loadData = async () => {
-    setGroups([]);
-    setIsRefreshing(true);
-
-    const response = await Axios.get(
-      'https://spravkaaptek.ru/api/drug-categories/',
-    );
-    setGroups(response.data);
-    setIsRefreshing(false);
-  };
+const GroupList = ({ navigation }) => {
+  const dispatch = useDispatch();
+  const categories = useSelector(state => state.reference.categories);
+  const isLoading = useSelector(state => state.reference.isLoadingCategories);
+  const error = useSelector(state => state.reference.categoriesError);
 
   React.useEffect(() => {
-    loadData();
+    dispatch(loadAllCategories());
   }, []);
+
+  const renderEmpty = () =>
+    error && <NoContentFiller text="Не удалость загрузить данные :(" />;
 
   return (
     <FlatList
-      data={groups}
+      data={categories}
       keyExtractor={item => item.id.toString()}
-      renderItem={({item}) => (
+      renderItem={({ item }) => (
         <ListItem
           item={item}
           onOpen={() =>
@@ -42,10 +40,12 @@ const GroupList = ({navigation}) => {
       refreshControl={
         <RefreshControl
           colors={[COLORS.PRIMARY]}
-          refreshing={isRefreshing}
-          onRefresh={loadData}
+          refreshing={isLoading}
+          onRefresh={() => dispatch(loadAllCategories())}
         />
       }
+      ListEmptyComponent={renderEmpty}
+      contentContainerStyle={{ flexGrow: 1 }}
     />
   );
 };
