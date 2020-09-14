@@ -118,45 +118,55 @@ export const multiSearch = value => async (dispatch, getState) => {
 };
 
 export const searchResults = value => async (dispatch, getState) => {
-  // GET params
-  const state = getState();
-  const { settings, search, location } = state;
-  const { selectedPharm } = search;
-  const {
-    selectedRegion,
-    selectedTown,
-    selectedRange,
-    selectedOrder,
-  } = settings;
-  const { location: userPosition } = location;
-  const { latitude, longitude } = userPosition || {};
-
-  const pharmId = (selectedPharm && selectedPharm.id) || '';
-  const townId = (selectedTown && selectedTown.id) || '';
-  const regionId = (selectedRegion && selectedRegion.id) || '';
-
   dispatch({ type: IS_LOADING_ITEMS, isLoading: true, value });
 
   try {
     var response = await api.get(`/search/?format=json&name=${value}`, {
-      params: {
-        order_type: selectedOrder.value,
-        page: 1,
-        price_list__pharmacy: pharmId,
-        price_list__pharmacy__town: townId,
-        price_list__pharmacy__town__region: regionId,
-        ...(selectedRange &&
-          userPosition && {
-            distance: selectedRange,
-            user_position: `${latitude},${longitude}`,
-          }),
-      },
+      params: { ...withParams() },
     });
   } catch (error) {
     console.log(error);
   }
 
   dispatch({ type: FETCH_SEARCH_ITEMS, payload: { ...response.data, value } });
+
+  function withParams() {
+    const state = getState();
+    const { selectedRegion: region, selectedTown: town } = state.settings;
+    const { selectedOrder } = state.settings;
+
+    let params = {
+      page: 1,
+      price_list__pharmacy__town: (town && town.id) || '',
+      price_list__pharmacy__town__region: (region && region.id) || '',
+      order_type: selectedOrder.value,
+    };
+
+    params = withPharmParams(params);
+    params = withRangeParams(params);
+
+    return params;
+
+    function withPharmParams(params) {
+      const { selectedPharm: pharm } = state.search;
+      return { ...params, ...(pharm && { price_list__pharmacy: pharm.id }) };
+    }
+
+    function withRangeParams(params) {
+      const { selectedRange: range } = state.settings;
+      const { location: userPosition } = state.location;
+      const { latitude, longitude } = userPosition || {};
+
+      return {
+        ...params,
+        ...(range &&
+          userPosition && {
+            distance: range,
+            user_position: `${latitude},${longitude}`,
+          }),
+      };
+    }
+  }
 };
 
 export const loadNextPage = () => async (dispatch, getState) => {
