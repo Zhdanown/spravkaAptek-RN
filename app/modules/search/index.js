@@ -122,7 +122,12 @@ export const searchResults = value => async (dispatch, getState) => {
   const state = getState();
   const { settings, search, location } = state;
   const { selectedPharm } = search;
-  const { selectedRegion, selectedTown, distance, selectedOrder } = settings;
+  const {
+    selectedRegion,
+    selectedTown,
+    selectedRange,
+    selectedOrder,
+  } = settings;
   const { location: userPosition } = location;
   const { latitude, longitude } = userPosition || {};
 
@@ -131,7 +136,7 @@ export const searchResults = value => async (dispatch, getState) => {
   const regionId = (selectedRegion && selectedRegion.id) || '';
 
   dispatch({ type: IS_LOADING_ITEMS, isLoading: true, value });
-  
+
   try {
     var response = await api.get(`/search/?format=json&name=${value}`, {
       params: {
@@ -140,12 +145,15 @@ export const searchResults = value => async (dispatch, getState) => {
         price_list__pharmacy: pharmId,
         price_list__pharmacy__town: townId,
         price_list__pharmacy__town__region: regionId,
-        ...(distance && userPosition && { distance, user_position: `${latitude},${longitude}` }),
+        ...(selectedRange &&
+          userPosition && {
+            distance: selectedRange,
+            user_position: `${latitude},${longitude}`,
+          }),
       },
     });
-    
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 
   dispatch({ type: FETCH_SEARCH_ITEMS, payload: { ...response.data, value } });

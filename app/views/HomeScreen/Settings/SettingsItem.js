@@ -6,19 +6,29 @@ import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../../config';
 
 export default function(props) {
-  if (props.onPress) return (
-    <TouchableOpacity disabled={props.disabled} onPress={props.onPress}>
-      <SettingsItem {...props} />
-    </TouchableOpacity>
-  );
+  const navigation = useNavigation();
+
+  if (props.onItemSelect)
+    return (
+      <TouchableOpacity
+        disabled={props.disabled}
+        onPress={() =>
+          navigation.navigate('SettingsOptionList', {
+            title: props.title,
+            options: props.options,
+            onItemSelect: props.onItemSelect,
+          })
+        }>
+        <SettingsItem {...props} />
+      </TouchableOpacity>
+    );
 
   return <SettingsItem {...props} />;
 }
 
 function SettingsItem(props) {
   const { selectedValue, title, children, disabled = false } = props;
-  const navigation = useNavigation();
-
+  
   return (
     <View style={[styles.card, { opacity: disabled ? 0.5 : 1 }]}>
       <View style={styles.oneLine}>

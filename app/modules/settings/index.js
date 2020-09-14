@@ -1,7 +1,6 @@
 import api from '../../services/api';
 import { searchResults } from '../search';
 
-// Actions
 const LOAD_REGIONS = 'settings/LOAD_REGIONS';
 const LOAD_TOWNS = 'settings/LOAD_DISTRICTS';
 const APPLY_SETTINGS = 'settings/SET';
@@ -22,10 +21,9 @@ const initialState = {
   selectedTown: defaultTown,
   orderOptions,
   selectedOrder: orderOptions[0],
-  distance: 0, // search radius (do not use radius by default
+  selectedRange: 0, // search radius (do not use radius by default)
 };
 
-// Reducer
 export default function reducer(state = initialState, action) {
   switch (action.type) {
     case LOAD_REGIONS:
@@ -59,28 +57,23 @@ export default function reducer(state = initialState, action) {
   }
 }
 
-// Action creators
 export const applySettings = newSettings => async (dispatch, getState) => {
   dispatch({ type: APPLY_SETTINGS, payload: newSettings });
 
-  // refresh results without selected pharn
+  // refresh search results without selected pharm
   const { value } = getState().search;
   if (value.length > 2) {
     dispatch(searchResults(value));
   }
 };
 
-export const loadRegions = () => async (dispatch, getState) => {
+export const loadRegions = () => async dispatch => {
   try {
     var response = await api.get('/regions');
   } catch (error) {}
 
   dispatch({ type: LOAD_REGIONS, regions: response.data });
-  // const { selectedRegion } = getState().settings;
-  // select 1st region
-  // if (!selectedRegion) dispatch(selectRegion(response.data[0]));
 };
-
 
 export const loadTowns = regionId => async (dispatch, getState) => {
   try {
