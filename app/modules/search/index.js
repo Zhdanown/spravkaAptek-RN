@@ -5,8 +5,11 @@ export const FETCH_SEARCH_ITEMS = 'search/FETCH_ITEMS';
 const IS_LOADING_ITEMS = 'search/IS_LOADING_ITEMS';
 const IS_LOADING_NEXT_PAGE = 'search/IS_LOADING_NEXT_PAGE';
 const LOAD_NEXT_PAGE = 'search/LOAD_NEXT_PAGE';
-const MULTI_SEARCH = 'search/MULTI_SEARCH';
-const START_MULTI_SEARCHING = 'search/START_MULTI_SEARCHING';
+
+export const REQUEST_SUGGESTIONS = 'search/REQUEST_SUGGESTIONS';
+const TOGGLE_SUGGESTIONS_LOADER = 'search/TOGGLE_SUGGESTIONS_LOADER';
+const SET_SUGGESTIONS = 'search/SET_SUGGESTIONS';
+
 export const LOG_SEARCH_RESULT = 'search/LOG_RESULT';
 const REMOVE_HISTORY_ITEM = 'search/REMOVE_HISTORY_ITEM';
 const CLEAR_SEARCH_HISTORY = 'search/CLEAR_HISTORY';
@@ -19,9 +22,8 @@ const initialState = {
   selectedPharm: null,
   isLoading: false,
   isLoadingNextPage: false,
-  multiSearchItems: [],
-  multiSearchValue: '',
-  isMultiSearching: false,
+  suggestions: [],
+  isLoadingSuggestions: false,
   history: [],
 };
 
@@ -65,18 +67,11 @@ export default function reducer(state = initialState, action) {
         isLoadingNextPage: action.isLoading,
       };
 
-    case MULTI_SEARCH:
-      return {
-        ...state,
-        multiSearchItems: action.results,
-        isMultiSearching: false,
-      };
+    case TOGGLE_SUGGESTIONS_LOADER:
+      return { ...state, isLoadingSuggestions: action.payload };
 
-    case START_MULTI_SEARCHING:
-      return {
-        ...state,
-        isMultiSearching: true,
-      };
+    case SET_SUGGESTIONS:
+      return { ...state, suggestions: action.payload}
 
     case LOG_SEARCH_RESULT:
       return {
@@ -103,19 +98,18 @@ export default function reducer(state = initialState, action) {
   }
 }
 
-// Action craeators
-export const multiSearch = value => async (dispatch, getState) => {
-  dispatch({ type: START_MULTI_SEARCHING });
 
-  if (value.length > 2) {
-    var response = await api.get(
-      `/multi-search/?format=json&name=${value}&region=1`,
-    );
-    dispatch({ type: MULTI_SEARCH, results: response.data.slice(0, 7) });
-  } else if (!value) {
-    dispatch({ type: MULTI_SEARCH, results: [] });
-  }
-};
+export function loadSuggestions(value) {
+  return { type: REQUEST_SUGGESTIONS, payload: value };
+}
+
+export function showSuggestionsLoader(payload) {
+  return { type: TOGGLE_SUGGESTIONS_LOADER, payload };
+}
+
+export function showSuggestions (payload) {
+  return { type: SET_SUGGESTIONS, payload}
+}
 
 export const searchResults = value => async (dispatch, getState) => {
   dispatch({ type: IS_LOADING_ITEMS, isLoading: true, value });

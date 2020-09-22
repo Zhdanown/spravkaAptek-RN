@@ -6,7 +6,7 @@ import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { COLORS } from '../../config';
-import { searchResults, multiSearch } from "../../modules/search"
+import { searchResults, loadSuggestions } from "../../modules/search"
 
 
 export default function Dropdown({ options }) {
@@ -15,7 +15,7 @@ export default function Dropdown({ options }) {
 
   const onSearchItemSelect = (item) => {
     dispatch(searchResults(item.name));
-    dispatch(multiSearch(""))
+    dispatch(loadSuggestions(""))
   }
 
   return (

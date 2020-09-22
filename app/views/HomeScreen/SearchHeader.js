@@ -1,27 +1,22 @@
 import React from 'react';
-import {View} from 'react-native';
+import { View } from 'react-native';
 
-import {connect} from 'react-redux';
-import {useNavigation} from '@react-navigation/native';
-import {SearchBar} from 'react-native-elements';
+import { connect } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
+import { SearchBar } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-import Dropdown from "./Dropdown";
+import Dropdown from './Dropdown';
 import SelectedPharmSearch from './SelectedPharmSearch';
 import IconButton from '../../components/IconButton';
-import {COLORS} from '../../config';
-import {
-  clearSearchPharm,
-  searchResults,
-  multiSearch,
-} from '../../modules/search';
+import { COLORS } from '../../config';
+import * as actions from '../../modules/search';
 
-const SearchHeader = (props) => {
-  
-  const {selectedPharm, clearSearchPharm} = props;
-  const {searchedValue, searchResults} = props;
-  const {multiSearch, multiSearchItems, isMultiSearching} = props;
-  
+const SearchHeader = props => {
+  const { selectedPharm, clearSearchPharm } = props;
+  const { searchedValue, searchResults } = props;
+  const { loadSuggestions, suggestions, isLoadingSuggestions } = props;
+
   const navigation = useNavigation();
 
   const [inputValue, setInputValue] = React.useState('');
@@ -32,34 +27,34 @@ const SearchHeader = (props) => {
   const onInputSubmit = () => {
     searchResults(inputValue);
     hideDropdown();
-  }
+  };
 
   // fill search input with selected value
   React.useEffect(() => {
     setInputValue(searchedValue);
-  }, [searchedValue])
+  }, [searchedValue]);
 
   // update input value when typing
   const onInputValueChange = value => {
     setInputValue(value);
-    multiSearch(value)
-  }
+    loadSuggestions(value);
+  };
 
   // update dropdown list when input is getting focus
   const onInputFocus = () => {
     toggleSearchbarFocus(true);
-    if (inputValue && inputValue.length > 2) multiSearch(inputValue)
+    if (inputValue && inputValue.length > 2) loadSuggestions(inputValue);
     // TODO add prop 'visible' to dropdown instead of clearing values
-  }
+  };
 
   const onInputBlur = () => {
     toggleSearchbarFocus(false);
     hideDropdown();
-  }
+  };
 
   const hideDropdown = () => {
-    multiSearch('')
-  }
+    loadSuggestions('');
+  };
 
   function FilterButton() {
     return (
@@ -78,7 +73,7 @@ const SearchHeader = (props) => {
   return (
     <View
       style={{
-        position: "absolute",
+        position: 'absolute',
         left: 8,
         right: 8,
         top: 8,
@@ -87,9 +82,9 @@ const SearchHeader = (props) => {
         borderRadius: 8,
         backgroundColor: 'white',
       }}>
-
-      <View style={{
-          flexDirection: 'row', 
+      <View
+        style={{
+          flexDirection: 'row',
           alignItems: 'center',
           backgroundColor: 'white',
           borderRadius: 8,
@@ -103,7 +98,7 @@ const SearchHeader = (props) => {
           placeholder="мин. 3 символа"
           platform="default"
           lightTheme={true}
-          showLoading={isMultiSearching}
+          showLoading={isLoadingSuggestions}
           containerStyle={{
             flex: 1,
             borderRadius: 8,
@@ -118,7 +113,7 @@ const SearchHeader = (props) => {
         />
         <FilterButton navigation={navigation} />
       </View>
-      
+
       {/* show selected pharm only when input in focus */}
       {selectedPharm && searchbarHasFocus && (
         <SelectedPharmSearch
@@ -127,8 +122,7 @@ const SearchHeader = (props) => {
         />
       )}
 
-      <Dropdown options={multiSearchItems} />
-      
+      <Dropdown options={suggestions} />
     </View>
   );
 };
@@ -142,5 +136,5 @@ function mapStateToProps(state) {
 
 export default connect(
   mapStateToProps,
-  {clearSearchPharm, searchResults, multiSearch},
+  { ...actions },
 )(SearchHeader);
