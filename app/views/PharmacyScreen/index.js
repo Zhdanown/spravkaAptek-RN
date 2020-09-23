@@ -13,9 +13,8 @@ import Map from '../../components/Map';
 import CenteredButton from '../../components/CenteredButton';
 import NoContentFiller from '../../components/NoContentFiller';
 
-import { COLORS } from '../../config';
-
 import { getRoute, calculateDistance } from '../../utils';
+import ProductSection from './ProductSection';
 
 function PharmacyScreen({ navigation, route, setSearchPharm, ...props }) {
   const { location, isTrackingLocation } = props;
@@ -35,34 +34,15 @@ function PharmacyScreen({ navigation, route, setSearchPharm, ...props }) {
 
   const {
     name,
-    short_address: address,
-    is_work_now: isOpenNow,
+    address,
+    isOpenNow,
     schedule: { name: schedule },
     contacts,
     pharmacy_photos,
   } = pharmacy;
 
-  const { drugName, country, price, quantity } = drug;
   const windowHeight = useWindowDimensions().height;
   const mapHeight = windowHeight * 0.5;
-
-  const renderDrugInfo = () => {
-    return (
-      <View
-        style={[
-          styles.section,
-          { borderColor: COLORS.PRIMARY, borderWidth: 1 },
-        ]}>
-        <Text style={{ fontSize: 16 }}>
-          {drugName} ({country})
-        </Text>
-        <View style={[styles.justified, { marginTop: 5 }]}>
-          <Text style={styles.bold}>В наличии: {quantity}</Text>
-          <Text style={styles.bold}>по {price} &#8381;</Text>
-        </View>
-      </View>
-    );
-  };
 
   return (
     <View style={{ flex: 1 }}>
@@ -82,9 +62,9 @@ function PharmacyScreen({ navigation, route, setSearchPharm, ...props }) {
         />
 
         <View style={{ padding: 10 }}>
-          {renderDrugInfo()}
 
-          {/* Pharmacy Info */}
+          {drug && <ProductSection product={drug}/>}
+
           <Text style={styles.pharmacyName}>{name}</Text>
 
           <CenteredButton
