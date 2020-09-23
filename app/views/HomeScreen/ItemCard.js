@@ -1,108 +1,75 @@
 import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import MIcon from 'react-native-vector-icons/MaterialIcons';
-import {COLORS} from '../../config';
-import {formatDate, calculateDistance} from '../../utils';
+import { View, Text, StyleSheet } from 'react-native';
 
-const withLocation = Component => {
-  return props => {
-    const {
-      price_list: {
-        pharmacy: {latitude, longitude},
-      },
-    } = props.item;
-    const {location} = props;
-    const distance = location
-      ? calculateDistance(location, {latitude, longitude})
-      : null;
-    return <Component {...props} distance={distance} />;
-  };
-};
+import Card from '../../components/Card';
+import PharmContent from '../PharmaciesScreen/PharmContent';
+import { formatDate, calculateDistance } from '../../utils';
+
 class ItemCard extends React.PureComponent {
-  renderLocation() {
-    const {distance, location, isTrackingLocation} = this.props;
-    const iconName = location
-      ? distance && 'location-on'
-      : isTrackingLocation
-      ? 'loop'
-      : 'location-off';
-    const text = location
-      ? distance && `${distance} км`
-      : !isTrackingLocation && 'н/д';
-    return (
-      <Text style={{color: COLORS.FADED}}>
-        {<MIcon name={iconName} size={15} />}
-        {text}
-      </Text>
-    );
-  }
-
   render() {
-    const {
-      name,
-      country,
-      price,
-      quantity,
-      add_date,
-      price_list: {
-        pharmacy,
-        pharmacy: {short_address: address, is_work_now: isOpenNow},
-      },
-    } = this.props.item;
-    const added = formatDate(add_date);
+    const { distance, location, isTrackingLocation } = this.props;
+    const { pharmacy } = this.props.item.price_list;
+    const { short_address: address, is_work_now: isOpenNow } = pharmacy;
+
+    const pharmProps = {
+      distance,
+      pharmacy,
+      address,
+      isOpenNow,
+      location,
+      isTrackingLocation,
+    };
 
     return (
-      <TouchableOpacity onPress={this.props.onOpen}>
-        <View style={styles.item}>
-          <Text style={styles.itemName}>{name + ` (${country})`}</Text>
-          <View style={styles.justified}>
-            <Text style={styles.pharmacyName}>{pharmacy.name}</Text>
-            <Text
-              style={
-                (styles.isPharmacyOpen,
-                {color: isOpenNow ? 'green' : 'firebrick'})
-              }>
-              {isOpenNow ? 'Открыто' : 'Закрыто'}
-            </Text>
-          </View>
-
-          {/* address and distance */}
-          <View style={styles.addressDistance}>
-            <Text style={styles.itemDistance}>{this.renderLocation()}</Text>
-            <Text style={styles.pharmacyAddress}>{address}</Text>
-          </View>
-
-          <Text style={styles.addDate}>{added}</Text>
-
-          {/* price, quantity, status */}
-          <View style={[styles.justified, styles.quantityPrice]}>
-            <Text style={[styles.itemQuantity, styles.bold]}>
-              В наличии: <Text style={styles.bold}>{quantity}</Text>
-            </Text>
-            <Text style={[styles.itemPrice, styles.bold]}>
-              по <Text style={styles.bold}>{price} &#8381;</Text>
-            </Text>
-          </View>
-        </View>
-      </TouchableOpacity>
+      <Card onPress={this.props.onOpen}>
+        <ItemContent
+          {...this.props.item}
+          render={() => <PharmContent {...pharmProps} />}
+        />
+      </Card>
     );
   }
 }
 
-export default withLocation(ItemCard);
+export default withDistance(ItemCard);
+
+function withDistance(Component) {
+  return props => {
+    const {
+      price_list: {
+        pharmacy: { latitude, longitude },
+      },
+    } = props.item;
+    const { location } = props;
+    const distance = location
+      ? calculateDistance(location, { latitude, longitude })
+      : null;
+    return <Component {...props} distance={distance} />;
+  };
+}
+
+function ItemContent(props) {
+  const { name, add_date, country, quantity, price } = props;
+  const added = formatDate(add_date);
+
+  return (
+    <>
+      <Text style={styles.itemName}>{name + ` (${country})`}</Text>
+      {props.render()}
+      <Text style={styles.addDate}>{added}</Text>
+      <View style={[styles.justified, styles.quantityPrice]}>
+        <Text style={[styles.itemQuantity, styles.bold]}>
+          В наличии: <Text style={styles.bold}>{quantity.toFixed(2)}</Text>
+        </Text>
+        <Text style={[styles.itemPrice, styles.bold]}>
+          по <Text style={styles.bold}>{price} &#8381;</Text>
+        </Text>
+      </View>
+    </>
+  );
+}
 
 const styles = StyleSheet.create({
-  item: {
-    padding: 10,
-    paddingVertical: 15,
-    margin: 8,
-    borderRadius: 8,
-    backgroundColor: 'white',
-    shadowColor: '#ccc',
-    shadowOffset: {width: 1, height: 1},
-    shadowRadius: 4,
-    shadowOpacity: .5,
-  },
   justified: {
     flexDirection: 'row',
     alignItems: 'flex-start',
@@ -113,17 +80,6 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     marginBottom: 10,
   },
-  pharmacyName: {
-    flex: 1,
-    fontSize: 18,
-    fontWeight: '900',
-    color: COLORS.FADED,
-  },
-  pharmacyAddress: {
-    color: COLORS.FADED,
-    flex: 1,
-  },
-  isPharmacyOpen: {},
   quantityPrice: {
     marginTop: 10,
   },
@@ -132,14 +88,6 @@ const styles = StyleSheet.create({
   },
   addDate: {
     color: '#999',
-  },
-  addressDistance: {
-    flexDirection: 'row',
-  },
-  itemDistance: {
-    color: COLORS.FADED,
-    marginRight: 10,
-    fontWeight: 'bold',
   },
   bold: {
     fontWeight: 'bold',

@@ -6,7 +6,7 @@ export default function PharmSchedule({schedule, isOpenNow}) {
 	return (
 		<View style={[styles.justified, styles.section]}>
 			<View style={{ flexDirection: 'column' }}>
-				{schedule
+				{schedule.name
 					.split(';')
 					.map(x => x.trim())
 					.map((scheduleItem, index) => (

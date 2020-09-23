@@ -9,7 +9,6 @@ import NoContentFiller from '../../components/NoContentFiller';
 import { COLORS } from '../../config';
 import * as actions from '../../modules/pharmacies';
 import PharmacyCard from './PharmacyCard';
-import convertToPharmacy from "./convertToPharmacy"
 
 const PharmaciesScreen = props => {
   const { navigation } = props;
@@ -19,14 +18,6 @@ const PharmaciesScreen = props => {
 
   useEffect(() => {
     loadPharmacies();
-
-    const unsubscribe = navigation.addListener('beforeRemove', e => {
-      console.log(e.data)
-      e.preventDefault();
-      
-    });
-    return unsubscribe
-
   }, [])
 
   return (
@@ -42,7 +33,7 @@ const PharmaciesScreen = props => {
             onOpen={() =>
               navigation.navigate('Pharmacy', {
                 title: item.name,
-                pharmacy: convertToPharmacy(item),
+                pharmId: item.id,
               })
             }
           />

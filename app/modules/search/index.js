@@ -16,9 +16,9 @@ const CLEAR_SEARCH_HISTORY = 'search/CLEAR_HISTORY';
 
 const initialState = {
   fetchedItems: [],
-  value: '', // searched value
-  count: null, // coune of found values
-  nextPage: '', // next page url
+  value: '',
+  count: null,
+  nextPage: '',
   selectedPharm: null,
   isLoading: false,
   isLoadingNextPage: false,

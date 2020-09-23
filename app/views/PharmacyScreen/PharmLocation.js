@@ -3,13 +3,13 @@ import { View, Text, StyleSheet } from 'react-native';
 import MIcon from "react-native-vector-icons/MaterialIcons";
 import {COLORS} from "../../config";
 
-export default function PharmLocation({address, location, distance, isTrackingLocation}) {
-  const iconName = location
+export default function PharmLocation({address, userLocation, distance, isTrackingLocation}) {
+  const iconName = userLocation
     ? distance && 'location-on'
     : isTrackingLocation
       ? 'loop'
       : 'location-off';
-  const text = location
+  const text = userLocation
     ? distance && `${distance} км`
     : !isTrackingLocation && 'местоположение не определено';
 

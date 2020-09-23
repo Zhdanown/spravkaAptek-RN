@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { setSearchPharm } from '../../modules/search';
 
-import { View, Text, ScrollView, StyleSheet, Animated } from 'react-native';
+import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { useWindowDimensions } from 'react-native';
 
 import PharmContacts from './PharmContacts';
@@ -15,55 +15,76 @@ import NoContentFiller from '../../components/NoContentFiller';
 
 import { getRoute, calculateDistance } from '../../utils';
 import ProductSection from './ProductSection';
+import api from '../../services/api';
 
 function PharmacyScreen({ navigation, route, setSearchPharm, ...props }) {
-  const { location, isTrackingLocation } = props;
-  const { pharmacy, drug } = route.params;
-  const { latitude, longitude } = pharmacy;
-  const pharmCoordinates = { latitude: +latitude, longitude: +longitude };
+  const { location: userLocation, isTrackingLocation } = props;
+  const { pharmId, drug } = route.params;
+  const [pharmacy, setPharmacy] = React.useState(null);
+  const [isLoading, setLoader] = React.useState(false);
   const [distance, setDistance] = React.useState(null);
 
   React.useEffect(() => {
-    const newDistance = location
-      ? calculateDistance(location, { latitude, longitude })
+    if (!pharmacy) fetchPharmInfo(pharmId);
+  }, []);
+
+  React.useEffect(() => {
+    if (!pharmacy) return;
+    const newDistance = userLocation
+      ? calculateDistance(userLocation, getPharmCoordinates())
       : null;
     setDistance(newDistance);
-  }, [location]);
+  }, [userLocation, pharmacy]);
 
-  if (!pharmacy) return <NoContentFiller text="Аптека не найдена" />;
+  const fetchPharmInfo = async pharmId => {
+    try {
+      setLoader(true);
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      const response = await api.get(`/simple-pharmacy/${pharmId}/`); //218
+      setPharmacy(response.data);
+      setLoader(false);
+      for (var key in response.data) {
+        console.log(key, response.data[key]);
+      }
+    } catch (err) {
+      setLoader(false);
+      console.error(err);
+    }
+  };
 
-  const {
-    name,
-    address,
-    isOpenNow,
-    schedule: { name: schedule },
-    contacts,
-    pharmacy_photos,
-  } = pharmacy;
+  function getPharmCoordinates() {
+    return pharmacy
+      ? { latitude: +pharmacy.latitude, longitude: +pharmacy.longitude }
+      : null;
+  }
 
   const windowHeight = useWindowDimensions().height;
-  const mapHeight = windowHeight * 0.5;
+  const mapHeight = windowHeight * 0.33;
+
+  if (isLoading) return <NoContentFiller text={'Загрузка...'} />;
+  if (!pharmacy) return <NoContentFiller text="Аптека не найдена" />;
+
+  const { name, address, is_work_now: isOpenNow } = pharmacy;
+  const { schedule, contacts, pharmacy_photos } = pharmacy;
 
   return (
     <View style={{ flex: 1 }}>
       <ScrollView style={{ flex: 1 }}>
-        {/* Map */}
         <View style={{ height: mapHeight }}>
           <Map
             mapHeight={mapHeight}
-            pharmCoordinates={pharmCoordinates}
-            userLocation={location}
+            pharmCoordinates={getPharmCoordinates()}
+            userLocation={userLocation}
           />
         </View>
 
         <CenteredButton
-          onPress={() => getRoute(latitude, longitude)}
+          onPress={() => getRoute(...getPharmCoordinates())}
           title="Проложить маршрут"
         />
 
         <View style={{ padding: 10 }}>
-
-          {drug && <ProductSection product={drug}/>}
+          {drug && <ProductSection product={drug} />}
 
           <Text style={styles.pharmacyName}>{name}</Text>
 
@@ -74,7 +95,7 @@ function PharmacyScreen({ navigation, route, setSearchPharm, ...props }) {
 
           <PharmLocation
             address={address}
-            location={location}
+            userLocation={userLocation}
             distance={distance}
             isTrackingLocation={isTrackingLocation}
           />

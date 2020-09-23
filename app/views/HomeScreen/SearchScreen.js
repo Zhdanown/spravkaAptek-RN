@@ -51,7 +51,7 @@ function SearchScreen(props) {
         onOpen={() =>
           navigation.navigate('Pharmacy', {
             title: item.name,
-            pharmacy: item.price_list.pharmacy,
+            pharmId: item.price_list.pharmacy.id,
             drug: {
               price: item.price,
               quantity: item.quantity,
