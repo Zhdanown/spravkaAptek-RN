@@ -8,10 +8,10 @@ import SettingsItem from './SettingsItem';
 import SettingsRegion from './SettingsRegion';
 import SettingsTown from './SettingsTown';
 import SettingsRange from './SettingsRange';
-import CenteredButton from '../../../components/CenteredButton';
-import { COLORS } from '../../../config';
-import * as actions from '../../../modules/settings';
+import CenteredButton from '../../components/CenteredButton';
 import showAlertOnExit from './showAlertOnExit';
+import { COLORS } from '../../config';
+import * as actions from '../../modules/settings';
 
 const SearchSettingsScreen = props => {
   const { navigation } = props;

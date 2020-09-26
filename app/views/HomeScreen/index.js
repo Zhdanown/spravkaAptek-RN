@@ -4,11 +4,11 @@ import { connect } from 'react-redux';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import SearchScreen from './SearchScreen';
-import SettingsScreen from './Settings';
 import PharmacyScreen from '../PharmacyScreen';
 import SearchHistory from './history/SearchHistory';
 import { getLocation } from '../../modules/location';
-import OptionListView from './Settings/OptionListView';
+import SettingsMain from '../Settings/SettingsMain';
+import SettingsItemOptions from '../Settings/SettingsItemOptions';
 
 const Stack = createStackNavigator();
 
@@ -46,17 +46,14 @@ function HomeScreen(props) {
         component={SearchHistory}
         options={{ title: 'История поиска' }}
       />
-
       <Stack.Screen
-        name="SearchSettings"
-        component={SettingsScreen}
-        options={{
-          title: 'Настройки поиска',
-        }}
+        name="Settings"
+        component={SettingsMain}
+        options={{ title: "Настройки" }}
       />
       <Stack.Screen
-        name="SettingsOptionList"
-        component={OptionListView}
+        name="SettingsItemOptions"
+        component={SettingsItemOptions}
         options={({ route }) => ({ title: route.params.title })}
       />
     </Stack.Navigator>

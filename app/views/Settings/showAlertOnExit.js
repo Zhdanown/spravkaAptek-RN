@@ -1,6 +1,6 @@
 import { Alert } from 'react-native';
 
-import { isSettingsDiffer } from '../../../modules/settings/isSettingsDiffer';
+import { isSettingsDiffer } from '../../modules/settings/isSettingsDiffer';
 
 export default (navigation, region, town, order, range) =>
   navigation.addListener('beforeRemove', e => {

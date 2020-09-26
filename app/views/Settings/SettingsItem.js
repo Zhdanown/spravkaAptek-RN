@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';
 
-import { COLORS } from '../../../config';
+import { COLORS } from '../../config';
 
 export default function(props) {
   const navigation = useNavigation();
@@ -13,7 +13,7 @@ export default function(props) {
       <TouchableOpacity
         disabled={props.disabled}
         onPress={() =>
-          navigation.navigate('SettingsOptionList', {
+          navigation.navigate('SettingsItemOptions', {
             title: props.title,
             options: props.options,
             onItemSelect: props.onItemSelect,

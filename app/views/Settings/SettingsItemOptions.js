@@ -1,10 +1,10 @@
 import React from 'react';
 import { FlatList } from 'react-native';
 
-import ListItem from '../../../components/ListItem';
-import NoContentFiller from '../../../components/NoContentFiller';
+import ListItem from '../../components/ListItem';
+import NoContentFiller from '../../components/NoContentFiller';
 
-export default function OptionListView({ navigation, route }) {
+export default function SettingsItemOptions({ navigation, route }) {
   const { options, onItemSelect } = route.params;
 
   if (!options) return <NoContentFiller text="Нет доступных вариантов" />;

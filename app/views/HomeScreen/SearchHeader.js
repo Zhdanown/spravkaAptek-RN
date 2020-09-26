@@ -20,7 +20,6 @@ const SearchHeader = props => {
   const navigation = useNavigation();
 
   const [inputValue, setInputValue] = React.useState('');
-
   const [searchbarHasFocus, toggleSearchbarFocus] = React.useState(false);
 
   // search submitted value
@@ -63,7 +62,7 @@ const SearchHeader = props => {
           paddingVertical: 8,
           paddingHorizontal: 12,
         }}>
-        <IconButton onPress={() => navigation.navigate('SearchSettings')}>
+        <IconButton onPress={() => navigation.navigate('Settings')}>
           <Icon name="menu" size={30} color={COLORS.PRIMARY} />
         </IconButton>
       </View>

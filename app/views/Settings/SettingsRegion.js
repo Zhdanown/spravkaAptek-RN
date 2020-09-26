@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
 import SettingsItem from './SettingsItem';
-import { loadRegions, loadTowns } from '../../../modules/settings';
+import { loadRegions, loadTowns } from '../../modules/settings';
 
 export default function SettingsRegion(props) {
   const { region, regions, setRegion } = props;

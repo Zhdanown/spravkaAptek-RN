@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import SettingsItem from './SettingsItem';
 import HelperText from './HelperText';
-import { COLORS } from '../../../config';
+import { COLORS } from '../../config';
 
 const rangeValues = [0, 1, 2, 3, 5, 8, 13, 21, 33, 54];
 

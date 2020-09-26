@@ -19,8 +19,7 @@ export default function SettingsTown(props) {
       selectedValue={(town && town.name) || 'Не выбрано'}
       disabled={!region}
       onItemSelect={item => setTown(item)}
-      options={filterTownsByRegion(region)}
-      >
+      options={filterTownsByRegion(region)}>
       {!region && <HelperText>Не выбран регион</HelperText>}
     </SettingsItem>
   );

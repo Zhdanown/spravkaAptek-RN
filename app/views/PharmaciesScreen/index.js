@@ -1,60 +1,39 @@
-import React, {useEffect} from 'react';
-import { View, Text, RefreshControl } from 'react-native';
-import { FlatList } from 'react-native';
+import React from 'react';
+import { createStackNavigator } from '@react-navigation/stack';
 
-import { connect } from 'react-redux';
+import Pharmacies from './Pharmacies';
+import PharmacyScreen from '../PharmacyScreen';
+import SettingsMain from '../Settings/SettingsMain';
+import SettingsItemOptions from '../Settings/SettingsItemOptions';
 
-import CenteredButton from '../../components/CenteredButton';
-import NoContentFiller from '../../components/NoContentFiller';
-import { COLORS } from '../../config';
-import * as actions from '../../modules/pharmacies';
-import PharmacyCard from './PharmacyCard';
+const Stack = createStackNavigator();
 
-const PharmaciesScreen = props => {
-  const { navigation } = props;
-  const { loadPharmacies } = props;
-  const { pharmacies, loading, count } = props;
-  const { location } = props;
-
-  useEffect(() => {
-    loadPharmacies();
-  }, [])
-
+export default function() {
   return (
-    <View style={{ flex: 1 }}>
-      <FlatList
-        style={{ flex: 1 }}
-        data={pharmacies}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item }) => (
-          <PharmacyCard
-            item={item}
-            location={location}
-            onOpen={() =>
-              navigation.navigate('Pharmacy', {
-                title: item.name,
-                pharmId: item.id,
-              })
-            }
-          />
-        )}
-        refreshControl={
-          <RefreshControl colors={COLORS.PRIMARY} refreshing={loading} />
-        }
-        initialNumToRender={10}
-        contentContainerStyle={{ flexGrow: 1 }}
-        ListEmptyComponent={loading && <NoContentFiller text={'Загрузка...'} />
-      }
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Pharmacies"
+        component={Pharmacies}
+        options={{
+          headerShown: false,
+          title: "Аптеки"
+        }}
       />
-
-    </View>
+      <Stack.Screen
+        name="Pharmacy"
+        component={PharmacyScreen}
+        options={({ route }) => ({ title: route.params.title })}
+      />
+      <Stack.Screen
+        name="Settings"
+        component={SettingsMain}
+        options={{ title: 'Настройки' }}
+      />
+      <Stack.Screen
+        name="SettingsItemOptions"
+        component={SettingsItemOptions}
+        options={({ route }) => ({ title: route.params.title })}
+      />
+    </Stack.Navigator>
   );
-};
-
-const mapStateToProps = state => {
-  return { ...state.pharmacies, ...state.location };
-};
-export default connect(
-  mapStateToProps,
-  { ...actions },
-)(PharmaciesScreen);
+}
