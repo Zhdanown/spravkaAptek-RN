@@ -14,6 +14,7 @@ export default function SearchParams() {
   const region = useSelector(state => state.settings.selectedRegion);
   const town = useSelector(state => state.settings.selectedTown);
   const count = useSelector(state => state.pharmacies.count);
+  const loading = useSelector(state => state.pharmacies.loading);
 
   const countOfFound = `${getWordEnding(count, [
     'Найден',
@@ -41,7 +42,7 @@ export default function SearchParams() {
         title="Изменить"
         onPress={() => navigation.navigate('Settings')}
       />
-      <Text style={styles.label}>{countOfFound}</Text>
+      {!loading && !!count && <Text style={styles.label}>{countOfFound}</Text>}
     </View>
   );
 }

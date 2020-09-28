@@ -12,7 +12,7 @@ import { COLORS } from '../../config';
 const PharmaciesScreen = props => {
   const { navigation } = props;
   const { loadPharmacies } = props;
-  const { pharmacies, loading } = props;
+  const { pharmacies, loading, count } = props;
   const { location } = props;
 
   useEffect(() => {
@@ -40,14 +40,23 @@ const PharmaciesScreen = props => {
         ListHeaderComponent={<SearchParams />}
         refreshControl={
           <RefreshControl
-            colors={COLORS.PRIMARY}
+            colors={[COLORS.PRIMARY]}
             refreshing={loading}
             onRefresh={loadPharmacies}
           />
         }
         initialNumToRender={10}
         contentContainerStyle={{ flexGrow: 1 }}
-        ListEmptyComponent={loading && <NoContentFiller text={'Загрузка...'} />}
+        ListEmptyComponent={() => (
+          <>
+            {loading && <NoContentFiller text={'Загрузка...'} />}
+            {!(loading || count) && (
+              <NoContentFiller
+                text={'По заданным параметрам\nничего не найдено'}
+              />
+            )}
+          </>
+        )}
       />
     </View>
   );
