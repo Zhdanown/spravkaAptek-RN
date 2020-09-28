@@ -23,6 +23,6 @@ const store = createStore(persistedReducer, applyMiddleware(...middleware));
 
 sagaMiddleware.run(rootSaga);
 let persistor = persistStore(store);
-// persistor.purge();
+persistor.purge();
 
 export { store, persistor };

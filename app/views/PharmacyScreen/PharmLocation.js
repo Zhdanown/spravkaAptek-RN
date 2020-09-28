@@ -32,7 +32,6 @@ export default function PharmLocation({address, userLocation, distance, isTracki
 
 
 const styles = StyleSheet.create({
-  
   section: {
     backgroundColor: 'white',
     borderRadius: 5,
@@ -46,8 +45,5 @@ const styles = StyleSheet.create({
   textWithIcon: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  bold: {
-    fontWeight: 'bold',
-  },
+  }
 });

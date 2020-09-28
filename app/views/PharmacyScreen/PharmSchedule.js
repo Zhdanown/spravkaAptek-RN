@@ -48,7 +48,4 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     justifyContent: 'space-between',
   },
-  bold: {
-    fontWeight: 'bold',
-  },
 })

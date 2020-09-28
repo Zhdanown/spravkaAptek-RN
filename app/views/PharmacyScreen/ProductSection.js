@@ -31,12 +31,12 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     shadowOpacity: 0.5,
   },
-  textWithIcon: {
+  justified: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
   },
-  highlighted: {
-    color: COLORS.PRIMARY,
+  bold: {
     fontWeight: 'bold',
   },
 });
