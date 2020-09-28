@@ -40,12 +40,9 @@ function PharmacyScreen({ navigation, route, setSearchPharm, ...props }) {
     try {
       setLoader(true);
       await new Promise(resolve => setTimeout(resolve, 1000));
-      const response = await api.get(`/simple-pharmacy/${pharmId}/`); //218
+      const response = await api.get(`/simple-pharmacy/${pharmId}/`);
       setPharmacy(response.data);
       setLoader(false);
-      for (var key in response.data) {
-        console.log(key, response.data[key]);
-      }
     } catch (err) {
       setLoader(false);
       console.error(err);

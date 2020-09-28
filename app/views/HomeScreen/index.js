@@ -22,7 +22,6 @@ function HomeScreen(props) {
       alert(
         'Не удалось определить местоположение. Некоторые функции будут недоступны',
       );
-      console.log(props.locationError);
     }
   }, [props.locationError]);
 
