@@ -76,7 +76,7 @@ function PharmacyScreen({ navigation, route, setSearchPharm, ...props }) {
         </View>
 
         <CenteredButton
-          onPress={() => getRoute(...getPharmCoordinates())}
+          onPress={() => getRoute(getPharmCoordinates())}
           title="Проложить маршрут"
         />
 
