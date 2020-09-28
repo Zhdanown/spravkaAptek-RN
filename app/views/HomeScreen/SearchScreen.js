@@ -25,7 +25,7 @@ function SearchScreen(props) {
 
   const renderHeader = () => {
     if (!count) return null;
-    const text = `${getWordEnding(count, [
+    const countOfFound = `${getWordEnding(count, [
       'Найден',
       'Найдено',
       'Найдено',
@@ -37,7 +37,7 @@ function SearchScreen(props) {
 
     return (
       <View style={{ paddingHorizontal: 10 }}>
-        <Text style={{ color: '#666' }}>{text}</Text>
+        <Text style={{ color: '#666' }}>{countOfFound}</Text>
       </View>
     );
   };

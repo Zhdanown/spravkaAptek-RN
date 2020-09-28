@@ -12,7 +12,7 @@ import { COLORS } from '../../config';
 const PharmaciesScreen = props => {
   const { navigation } = props;
   const { loadPharmacies } = props;
-  const { pharmacies, loading, count } = props;
+  const { pharmacies, loading } = props;
   const { location } = props;
 
   useEffect(() => {
@@ -39,7 +39,11 @@ const PharmaciesScreen = props => {
         )}
         ListHeaderComponent={<SearchParams />}
         refreshControl={
-          <RefreshControl colors={COLORS.PRIMARY} refreshing={loading} />
+          <RefreshControl
+            colors={COLORS.PRIMARY}
+            refreshing={loading}
+            onRefresh={loadPharmacies}
+          />
         }
         initialNumToRender={10}
         contentContainerStyle={{ flexGrow: 1 }}

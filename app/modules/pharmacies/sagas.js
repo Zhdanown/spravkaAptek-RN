@@ -1,8 +1,9 @@
-import { put, takeEvery, call } from 'redux-saga/effects';
+import { put, takeEvery, call, select } from 'redux-saga/effects';
 
 import { REQUEST_PHARMACIES, FETCH_PHARMACIES } from './index';
 
 import { showLoader, setError } from './index';
+import { getRegionAndTown } from '../settings';
 import api from '../../services/api';
 
 export function* watchPharmaciesRequest() {
@@ -12,7 +13,8 @@ export function* watchPharmaciesRequest() {
 function* requestPharmacies() {
   try {
     yield put(showLoader(true));
-    const payload = yield call(fetchPharmacies);
+    let settings = yield select(getRegionAndTown);
+    const payload = yield call(fetchPharmacies, settings);
     yield put({ type: FETCH_PHARMACIES, payload });
     yield put(showLoader(false));
   } catch (err) {
@@ -21,14 +23,19 @@ function* requestPharmacies() {
   }
 }
 
-async function fetchPharmacies() {
-  
-  const response = await api.get('/pharmacies/?format=json&page=1', {
-    params: {
-      order_type: 'order_number',
-      town__region: 1,
-      // town_district: 15
-    },
+async function fetchPharmacies({ region, town }) {
+  const response = await api.get('/pharmacies/', {
+    params: { ...getParams() },
   });
   return response.data;
+
+  function getParams() {
+    return {
+      format: 'json',
+      page: 1,
+      order_type: 'order_number',
+      town__region: (region && region.id) || '',
+      town_district: (town && town.id) || '',
+    };
+  }
 }

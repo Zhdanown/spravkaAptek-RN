@@ -93,3 +93,9 @@ export const loadTowns = regionId => async (dispatch, getState) => {
     regionId,
   });
 };
+
+
+export const getRegionAndTown = (state) => {
+  const {selectedRegion: region, selectedTown: town} = state.settings
+  return {region, town}
+}
