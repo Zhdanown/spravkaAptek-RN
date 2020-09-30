@@ -13,6 +13,7 @@ const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
   transforms: [DateTransform],
+  whitelist: ['settings', 'search'],
 };
 
 const sagaMiddleware = createSagaMiddleware();
@@ -23,6 +24,5 @@ const store = createStore(persistedReducer, applyMiddleware(...middleware));
 
 sagaMiddleware.run(rootSaga);
 let persistor = persistStore(store);
-persistor.purge();
 
 export { store, persistor };
