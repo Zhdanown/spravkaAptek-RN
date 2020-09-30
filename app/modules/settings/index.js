@@ -1,4 +1,5 @@
 import api from '../../services/api';
+import { loadPharmacies } from '../pharmacies';
 import { searchResults } from '../search';
 
 const LOAD_REGIONS = 'settings/LOAD_REGIONS';
@@ -65,6 +66,7 @@ export const applySettings = newSettings => async (dispatch, getState) => {
   if (value.length > 2) {
     dispatch(searchResults(value));
   }
+  dispatch(loadPharmacies())
 };
 
 export const loadRegions = () => async dispatch => {
