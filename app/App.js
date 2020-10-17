@@ -1,11 +1,12 @@
 import 'react-native-gesture-handler';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { SafeAreaView } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Provider } from 'react-redux';
 import { PersistGate } from "redux-persist/integration/react";
+import SplashScreen from 'react-native-splash-screen';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { store, persistor } from './modules/store';
@@ -19,6 +20,10 @@ import ignoreWarnings from './config/ignoreWarnings';
 const Tab = createBottomTabNavigator();
 
 function App() {
+  useEffect(() => {
+    SplashScreen.hide();
+  }, [])
+
   return (
     <Provider store={store}>
       <PersistGate persistor={persistor}>
