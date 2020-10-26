@@ -1,10 +1,10 @@
 import React from 'react';
-import {View, Text, StyleSheet, Animated} from 'react-native';
-import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
+import { View, StyleSheet } from 'react-native';
+import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import NoContentFiller from './NoContentFiller';
 import IconButton from './IconButton';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
-import {COLORS} from '../config';
+import { COLORS } from '../config';
 
 const styles = StyleSheet.create({
   map: {
@@ -12,10 +12,9 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ({mapHeight, pharmCoordinates, userLocation}) => {
-  const DEFAULT_ZOOM = 14
+export default ({ pharmCoordinates, userLocation }) => {
+  const DEFAULT_ZOOM = 14;
   const _map = React.useRef();
-  // const currentZoom = Math.round(Math.log(360 / region.longitudeDelta) / Math.LN2);
 
   const [region, setRegion] = React.useState({
     ...pharmCoordinates,
@@ -30,8 +29,7 @@ export default ({mapHeight, pharmCoordinates, userLocation}) => {
   const fitWithUserLocation = () => {
     if (_map.current) {
       _map.current.fitToCoordinates([pharmCoordinates, userLocation], {
-        // animated: false,
-        edgePadding: {top: 50, right: 50, bottom: 50, left: 50},
+        edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
       });
     }
   };
@@ -42,7 +40,7 @@ export default ({mapHeight, pharmCoordinates, userLocation}) => {
         center: pharmCoordinates,
         zoom: DEFAULT_ZOOM,
       },
-      {duration: 400},
+      { duration: 400 },
     );
   };
 
@@ -68,14 +66,19 @@ export default ({mapHeight, pharmCoordinates, userLocation}) => {
       <>
         <MapView
           ref={_map}
-          provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-          style={[styles.map, {flex: 1}]}
+          provider={PROVIDER_GOOGLE}
+          style={[styles.map, { flex: 1 }]}
           region={region}
           minZoomLevel={2}
           maxZoomLevel={18}
           onRegionChangeComplete={changeRegion}>
-          <Marker coordinate={pharmCoordinates} />
-          {userLocation && <Marker coordinate={userLocation} />}
+          <Marker
+            coordinate={pharmCoordinates}
+            image={require('../assets/pharmMarker.png')}
+          />
+          {userLocation && (
+            <Marker coordinate={userLocation} title="Вы здесь" />
+          )}
         </MapView>
         {renderMapControls()}
       </>
@@ -99,7 +102,7 @@ function ButtonGroup(props) {
   );
 }
 
-function MapButton({onPress, iconName}) {
+function MapButton({ onPress, iconName }) {
   return (
     <IconButton
       style={{
