@@ -24,6 +24,7 @@ function* requestCategories() {
 
 async function fetchCategories() {
   const response = await api.get('/drug-categories/');
+  response.data.sort(sortByName);
   return response.data;
 }
 
@@ -44,5 +45,16 @@ function* requestProducts(action) {
 
 async function fetchProducts(categoryId) {
   const response = await api.get(`/drug-list/?category=${categoryId}`);
+  response.data.results.sort(sortByName);
   return response.data.results;
+}
+
+function sortByName (a, b) {
+  if (a.name < b.name) {
+    return -1;
+  } else if (a.name > b.name) {
+    return 1;
+  } else {
+    return 0;
+  }
 }
