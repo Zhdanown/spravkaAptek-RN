@@ -1,22 +1,19 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 
-import { useDispatch } from "react-redux";
-import FA5Icon from 'react-native-vector-icons/FontAwesome5';
-import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import { useDispatch } from 'react-redux';
 import { COLORS } from '../../config';
-import { searchResults, loadSuggestions } from "../../modules/search"
-
+import { searchResults, loadSuggestions } from '../../modules/search';
 
 export default function Dropdown({ options }) {
-  
   const dispatch = useDispatch();
 
-  const onSearchItemSelect = (item) => {
+  const onSearchItemSelect = item => {
     dispatch(searchResults(item.name));
-    dispatch(loadSuggestions(""))
-  }
+    dispatch(loadSuggestions(''));
+  };
+
+  options = options.filter(item => item.category === 'drugs');
 
   return (
     <View
@@ -25,15 +22,11 @@ export default function Dropdown({ options }) {
         borderRadius: 8,
       }}>
       {options.map(option => (
-        <TouchableOpacity onPress={() => onSearchItemSelect(option)} key={option.id}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}>
-
-            {option.category === 'drugs' ? (
-              <FA5Icon name='tablets' size={16} color={COLORS.PRIMARY} />
-            ) : (
-              <MCIcon name='store' size={16} color={COLORS.PRIMARY} />
-            )}
-
+        <TouchableOpacity
+          onPress={() => onSearchItemSelect(option)}
+          key={option.id}>
+          <View
+            style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}>
             <Text
               numberOfLines={1}
               style={{

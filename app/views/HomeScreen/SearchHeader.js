@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import { connect } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import { SearchBar } from 'react-native-elements';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import Dropdown from './Dropdown';
 import SelectedPharmSearch from './SelectedPharmSearch';
@@ -63,7 +63,7 @@ const SearchHeader = props => {
           paddingHorizontal: 12,
         }}>
         <IconButton onPress={() => navigation.navigate('Settings')}>
-          <Icon name="menu" size={30} color={COLORS.PRIMARY} />
+          <Icon name="filter-variant" size={30} color={COLORS.PRIMARY} />
         </IconButton>
       </View>
     );
