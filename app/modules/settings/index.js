@@ -8,7 +8,6 @@ const APPLY_SETTINGS = 'settings/SET';
 
 const orderOptions = [
   { id: 1, name: 'По дате (сначала новые)', value: '-add_date' },
-  { id: 2, name: 'По дате (сначала старые)', value: 'add_date' },
   { id: 3, name: 'По цене (сначала дешёвые)', value: 'price' },
   { id: 4, name: 'По цене (сначала дорогие)', value: '-price' },
 ];
