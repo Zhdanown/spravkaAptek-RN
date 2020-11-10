@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Image } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import NoContentFiller from './NoContentFiller';
 import IconButton from './IconButton';
@@ -72,10 +72,12 @@ export default ({ pharmCoordinates, userLocation }) => {
           minZoomLevel={2}
           maxZoomLevel={18}
           onRegionChangeComplete={changeRegion}>
-          <Marker
-            coordinate={pharmCoordinates}
-            image={require('../assets/pharmMarker.png')}
-          />
+          <Marker coordinate={pharmCoordinates}>
+            <Image
+              source={require('../assets/pharmMarker.png')}
+              style={{ width: 25, height: 25 }}
+            />
+          </Marker>
           {userLocation && (
             <Marker coordinate={userLocation} title="Вы здесь" />
           )}
