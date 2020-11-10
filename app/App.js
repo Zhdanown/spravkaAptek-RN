@@ -27,7 +27,6 @@ function App() {
   return (
     <Provider store={store}>
       <PersistGate persistor={persistor}>
-
         <NavigationContainer>
           <Tab.Navigator
             screenOptions={({ route }) => ({
