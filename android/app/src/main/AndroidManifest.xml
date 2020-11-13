@@ -39,9 +39,9 @@
       <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
     
       <!-- Google maps setup -->
-      <meta-data
-        android:name="com.google.android.geo.API_KEY"
-        android:value="AIzaSyDy-ZAdmeX2YGK4fEpX0Z--wUekewIIFXo"/>
+      <meta-data 
+        android:name="com.google.android.geo.API_KEY" 
+        android:value="AIzaSyArBgpgb2oejpRt4Feks_lF7oSG9mldVX4" />
       <uses-library android:name="org.apache.http.legacy" android:required="false"/>
 
     </application>
