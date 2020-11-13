@@ -1,4 +1,4 @@
-package com.spravka_app; // Change this to your package name.
+package com.davids.phdirectory.droid;
 
 import android.content.Intent;
 import android.os.Bundle;
