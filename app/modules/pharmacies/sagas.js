@@ -3,7 +3,7 @@ import { put, takeEvery, call, select } from 'redux-saga/effects';
 import { REQUEST_PHARMACIES, FETCH_PHARMACIES } from './index';
 
 import { showLoader, setError } from './index';
-import { getRegionAndTown } from '../settings';
+import { getRegionTownDistrict } from '../settings';
 import api from '../../services/api';
 
 export function* watchPharmaciesRequest() {
@@ -13,7 +13,7 @@ export function* watchPharmaciesRequest() {
 function* requestPharmacies() {
   try {
     yield put(showLoader(true));
-    let settings = yield select(getRegionAndTown);
+    let settings = yield select(getRegionTownDistrict);
     const payload = yield call(fetchPharmacies, settings);
     yield put({ type: FETCH_PHARMACIES, payload });
     yield put(showLoader(false));
@@ -24,6 +24,7 @@ function* requestPharmacies() {
 }
 
 async function fetchPharmacies({ region, town, district }) {
+  console.log(district)
   const response = await api.get('/pharmacies/', {
     params: { ...getParams() },
   });

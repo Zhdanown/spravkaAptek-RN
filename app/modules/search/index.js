@@ -139,7 +139,6 @@ export const searchResults = value => async (dispatch, getState) => {
 
     params = withPharmParams(params);
     params = withRangeParams(params);
-
     return params;
 
     function withPharmParams(params) {
