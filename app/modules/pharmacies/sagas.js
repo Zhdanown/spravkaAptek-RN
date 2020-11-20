@@ -23,7 +23,7 @@ function* requestPharmacies() {
   }
 }
 
-async function fetchPharmacies({ region, town }) {
+async function fetchPharmacies({ region, town, district }) {
   const response = await api.get('/pharmacies/', {
     params: { ...getParams() },
   });
@@ -35,7 +35,8 @@ async function fetchPharmacies({ region, town }) {
       page: 1,
       order_type: 'order_number',
       town__region: (region && region.id) || '',
-      town_district: (town && town.id) || '',
+      town: (town && town.id) || '',
+      town_district: (district && district.id) || '',
     };
   }
 }
