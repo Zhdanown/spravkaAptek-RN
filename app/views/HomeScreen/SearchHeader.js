@@ -1,120 +1,139 @@
 import React from 'react';
-import {View, Animated} from 'react-native';
+import { View } from 'react-native';
+
+import { connect } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
-import {SearchBar} from 'react-native-elements';
-import Icon from 'react-native-vector-icons/AntDesign';
+import { SearchBar } from 'react-native-elements';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
+import Dropdown from './Dropdown';
+import SelectedPharmSearch from './SelectedPharmSearch';
 import IconButton from '../../components/IconButton';
+import { COLORS } from '../../config';
+import * as actions from '../../modules/search';
 
-const INPUT_OFFSET = 50;
-const FILTER_OFFSET = 50;
-const SPEED = 400;
+const SearchHeader = props => {
+  const { selectedPharm, clearSearchPharm } = props;
+  const { searchedValue, searchResults } = props;
+  const { loadSuggestions, suggestions, isLoadingSuggestions } = props;
 
-const SearchHeader = () => {
   const navigation = useNavigation();
 
-  const [loaded, setLoaded] = React.useState(false);
-  const [searchValue, setSearchValue] = React.useState('');
-  
+  const [inputValue, setInputValue] = React.useState('');
+  const [searchbarHasFocus, toggleSearchbarFocus] = React.useState(false);
 
-  const updateSearchResults = value => {
-    setSearchValue(value);
-    console.log(value)
+  // search submitted value
+  const onInputSubmit = () => {
+    searchResults(inputValue);
+    hideDropdown();
   };
 
-  const [inputOffset] = React.useState(new Animated.Value(0));
-  const [filterOffset] = React.useState(new Animated.Value(-FILTER_OFFSET));
-
+  // fill search input with selected value
   React.useEffect(() => {
-    setTimeout(() => {
-      setLoaded(true)
-    }, 3000)
-   
-  }, []);
+    setInputValue(searchedValue);
+  }, [searchedValue]);
 
+  // update input value when typing
+  const onInputValueChange = value => {
+    setInputValue(value);
+    loadSuggestions(value);
+  };
 
-  React.useEffect(() => {
-    if (loaded) inputMargin('collapse');
-    else inputMargin('expand');
-  }, [loaded]);
+  // update dropdown list when input is getting focus
+  const onInputFocus = () => {
+    toggleSearchbarFocus(true);
+    if (inputValue && inputValue.length > 2) loadSuggestions(inputValue);
+    // TODO add prop 'visible' to dropdown instead of clearing values
+  };
 
-  const inputMargin = (type) => {
-    // TODO must depend on results count
-    if (type == 'collapse') {
+  const onInputBlur = () => {
+    toggleSearchbarFocus(false);
+    hideDropdown();
+  };
 
-      Animated.timing(inputOffset, {
-        toValue: INPUT_OFFSET,
-        duration: SPEED,
-      }).start();
-      Animated.timing(filterOffset, {
-        toValue: 0,
-        duration: SPEED,
-      }).start();
-
-    } else {
-      Animated.timing(inputOffset, {
-        toValue: 0,
-        duration: SPEED,
-      }).start();
-      Animated.timing(filterOffset, {
-        toValue: -FILTER_OFFSET,
-        duration: SPEED,
-      }).start();
-    }
+  const hideDropdown = () => {
+    loadSuggestions('');
   };
 
   function FilterButton() {
-    Animated.createAnimatedComponent(
-
-    )
     return (
-        <Animated.View style={{
-          position: 'absolute',
-          right: filterOffset,
-          top: 0,
-          padding: 16,
-          // padding: 12, 
-          // backgroundColor: 'white', 
-          // paddingVertical: 17
+      <View
+        style={{
+          paddingVertical: 8,
+          paddingHorizontal: 12,
         }}>
-
-          <IconButton
-            onPress={() => navigation.navigate('Filter')}
-            >
-            <Icon name="filter" size={30} />
-          </IconButton>
-        </Animated.View>
-
+        <IconButton onPress={() => navigation.navigate('Settings')}>
+          <Icon name="filter-variant" size={30} color={COLORS.PRIMARY} />
+        </IconButton>
+      </View>
     );
   }
 
   return (
-    <View style={{marginBottom: 10, flexDirection: 'row', backgroundColor: 'white', marginTop: -0}}>
-      <Animated.View style={{flex: 1, marginRight: inputOffset}}>
+    <View
+      style={{
+        position: 'absolute',
+        left: 8,
+        right: 8,
+        top: 8,
+        borderColor: COLORS.PRIMARY,
+        borderWidth: 2,
+        borderRadius: 8,
+        backgroundColor: 'white',
+      }}>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          backgroundColor: 'white',
+          borderRadius: 8,
+        }}>
         <SearchBar
-          value={searchValue}
-          onChangeText={updateSearchResults}
+          value={inputValue}
+          onSubmitEditing={onInputSubmit}
+          onChangeText={onInputValueChange}
+          onBlur={onInputBlur}
+          onFocus={onInputFocus}
+          placeholder="мин. 3 символа"
           platform="default"
           lightTheme={true}
-          // showLoading={true}
-          // inputStyle={{backgroundColor: 'red'}}
+          showLoading={isLoadingSuggestions}
           containerStyle={{
-            // padding: 9,
-            backgroundColor: 'white',
+            flex: 1,
+            borderRadius: 8,
+            padding: 0,
             borderBottomWidth: 0,
             borderTopWidth: 0,
           }}
           inputContainerStyle={{
-            // height: 40,
-            // paddingTop: 3,
-            backgroundColor: 'rgba(32,100,220,.2)',
+            backgroundColor: 'white',
+            borderRadius: 8,
           }}
         />
-      </Animated.View>
+        <FilterButton navigation={navigation} />
+      </View>
 
-      <FilterButton navigation={navigation} />
+      {/* show selected pharm only when input in focus */}
+      {selectedPharm && searchbarHasFocus && (
+        <SelectedPharmSearch
+          pharm={selectedPharm}
+          clearPharm={clearSearchPharm}
+        />
+      )}
+
+      <Dropdown options={suggestions} />
     </View>
   );
 };
 
-export default SearchHeader;
+function mapStateToProps(state) {
+  return {
+    ...state.search,
+    searchedValue: state.search.value,
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  { ...actions },
+)(SearchHeader);

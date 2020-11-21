@@ -1,91 +1,95 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { View, Text, StyleSheet } from 'react-native';
 
+import Card from '../../components/Card';
+import PharmContent from '../PharmaciesScreen/PharmContent';
+import { formatDate, calculateDistance } from '../../utils';
 
-const ItemCard = ({item}) => {
+class ItemCard extends React.PureComponent {
+  render() {
+    const { distance, location, isTrackingLocation } = this.props;
+    const { pharmacy } = this.props.item.price_list;
+    const { short_address: address, is_work_now: isOpenNow } = pharmacy;
+
+    const pharmProps = {
+      distance,
+      pharmacy,
+      address,
+      isOpenNow,
+      location,
+      isTrackingLocation,
+    };
+
+    return (
+      <Card onPress={this.props.onOpen}>
+        <ItemContent
+          {...this.props.item}
+          render={() => <PharmContent {...pharmProps} />}
+        />
+      </Card>
+    );
+  }
+}
+
+export default withDistance(ItemCard);
+
+function withDistance(Component) {
+  return props => {
+    const {
+      price_list: {
+        pharmacy: { latitude, longitude },
+      },
+    } = props.item;
+    const { location } = props;
+    const distance = location
+      ? calculateDistance(location, { latitude, longitude })
+      : null;
+    return <Component {...props} distance={distance} />;
+  };
+}
+
+function ItemContent(props) {
+  const { name, add_date, country, quantity, price } = props;
+  const added = formatDate(add_date);
+
   return (
-    <View style={styles.item}>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'flex-start',
-          justifyContent: 'space-between',
-        }}>
-        <Text style={styles.pharmacyName}>{item.pharmacy.name}</Text>
-        <Text
-          style={
-            (styles.isPharmacyOpen,
-            {color: item.pharmacy.isOpenNow ? 'green' : 'firebrick'})
-          }>
-          {item.pharmacy.isOpenNow ? 'Открыто' : 'Закрыто'}
+    <>
+      <Text style={styles.itemName}>{name + ` (${country})`}</Text>
+      {props.render()}
+      <Text style={styles.addDate}>{added}</Text>
+      <View style={[styles.justified, styles.quantityPrice]}>
+        <Text style={[styles.itemQuantity, styles.bold]}>
+          В наличии: <Text style={styles.bold}>{quantity.toFixed(2)}</Text>
+        </Text>
+        <Text style={[styles.itemPrice, styles.bold]}>
+          по <Text style={styles.bold}>{price} &#8381;</Text>
         </Text>
       </View>
-      <Text style={styles.itemName}>{item.name}</Text>
-
-      <View
-        style={{flexDirection: 'row', marginVertical: 10, flexWrap: 'wrap'}}>
-        {/* price, quantity, status */}
-        <View style={{padding: 0}}>
-          <Text style={styles.itemQuantity}>
-            В наличии: <Text style={styles.highlighted}>{item.quantity}</Text>
-          </Text>
-          <Text style={styles.itemPrice}>
-            по <Text style={styles.highlighted}>{item.price} &#8381;</Text>
-          </Text>
-
-          <Text>{item.date}</Text>
-        </View>
-        {/* address and distance */}
-        <View style={{flex: 1, paddingLeft: 15}}>
-          <Text style={styles.pharmacyAddress}>{item.pharmacy.address}</Text>
-          <Text style={styles.itemDistance}>
-            <Icon name="map-marker-outline" size={15} />
-            {item.distance}км
-          </Text>
-        </View>
-      </View>
-    </View>
+    </>
   );
-};
-
-export default ItemCard;
+}
 
 const styles = StyleSheet.create({
-  item: {
-    backgroundColor: '#fff',
-    padding: 10,
-    marginBottom: 10
-    // borderWidth: 1,
-    // borderColor: 'steelblue'
+  justified: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
   },
   itemName: {
-
-  },
-  pharmacyName: {
-    flex: 1,
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: '900',
-    color: 'steelblue'
+    marginBottom: 10,
   },
-  pharmacyAddress: {
-    color: '#666'
-  },
-  isPharmacyOpen: {
-
-  },
-  itemPrice: {
-
+  quantityPrice: {
+    marginTop: 10,
   },
   itemQuantity: {
-
+    marginRight: 10,
   },
-  itemDistance: {
-    color: '#666'
+  addDate: {
+    color: '#999',
   },
-  highlighted: {
-    color: 'steelblue',
-    fontWeight: 'bold'
-  }
-
+  bold: {
+    fontWeight: 'bold',
+  },
 });

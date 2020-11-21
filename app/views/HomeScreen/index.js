@@ -1,40 +1,71 @@
 import React from 'react';
-import {StyleSheet, RefreshControl, FlatList} from 'react-native';
-import ItemCard from './ItemCard';
-import data from "../../assets/data"
 
-export default function HomeScreen({navigation}) {
-  const [results, setResults] = React.useState([]);
-  const [isRefreshing, setRefreshing] = React.useState(true);
+import { connect } from 'react-redux';
+import { createStackNavigator } from '@react-navigation/stack';
 
-  const loadResults = () => {
-    setResults([]);
-    setRefreshing(true);
+import SearchScreen from './SearchScreen';
+import PharmacyScreen from '../PharmacyScreen';
+import SearchHistory from './history/SearchHistory';
+import { getLocation } from '../../modules/location';
+import SettingsMain from '../Settings/SettingsMain';
+import SettingsItemOptions from '../Settings/SettingsItemOptions';
 
-    setTimeout(() => {
-      setRefreshing(false);
-      setResults(data);
-    }, 3000);
-  };
+const Stack = createStackNavigator();
 
+function HomeScreen(props) {
   React.useEffect(() => {
-    loadResults();
+    props.getLocation();
   }, []);
 
+  React.useEffect(() => {
+    if (props.locationError) {
+      alert(
+        'Не удалось определить местоположение. Некоторые функции будут недоступны',
+      );
+    }
+  }, [props.locationError]);
+
   return (
-    <FlatList
-      data={results}
-      renderItem={({item}) => <ItemCard item={item} />}
-      keyExtractor={item => item.id}
-      refreshControl={
-        <RefreshControl
-          colors={['steelblue']}
-          refreshing={isRefreshing}
-          onRefresh={loadResults}
-        />
-      }
-    />
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Search"
+        component={SearchScreen}
+        options={{
+          title: 'Поиск',
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="Pharmacy"
+        component={PharmacyScreen}
+        options={({ route }) => ({ title: route.params.title })}
+      />
+      <Stack.Screen
+        name="SearchHistory"
+        component={SearchHistory}
+        options={{ title: 'История поиска' }}
+      />
+      <Stack.Screen
+        name="Settings"
+        component={SettingsMain}
+        options={{ title: "Настройки" }}
+      />
+      <Stack.Screen
+        name="SettingsItemOptions"
+        component={SettingsItemOptions}
+        options={({ route }) => ({ title: route.params.title })}
+      />
+    </Stack.Navigator>
   );
 }
 
-const styles = StyleSheet.create({});
+const mapStateToProps = state => {
+  return {
+    locationError: state.location.locationError,
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  { getLocation },
+)(HomeScreen);
