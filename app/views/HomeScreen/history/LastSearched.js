@@ -29,6 +29,11 @@ export default function LastSearched() {
         </View>
       )}
 
+      <CenteredButton
+        onPress={() => navigation.navigate('SearchHistory')}
+        title="История поиска"
+      />
+
       {searchHistory.slice(0, 7).map(item => (
         <HistoryItem
           key={item.id}
@@ -38,11 +43,6 @@ export default function LastSearched() {
         />
       ))}
       {searchHistory.length > 7 && <Ellipsis />}
-
-      <CenteredButton
-        onPress={() => navigation.navigate('SearchHistory')}
-        title="Перейти к истории"
-      />
     </View>
   );
 }
