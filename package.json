@@ -9,7 +9,8 @@
     "test": "jest",
     "lint": "eslint .",
     "bundle": "cd android && gradlew clean && gradlew bundleRelease",
-    "build": "cd android && gradlew assembleRelease"
+    "build": "cd android && gradlew assembleRelease",
+    "semantic-release": "semantic-release"
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.12.0",
@@ -46,13 +47,16 @@
     "@babel/core": "^7.6.2",
     "@babel/runtime": "^7.6.2",
     "@react-native-community/eslint-config": "^0.0.5",
+    "@semantic-release/changelog": "^5.0.1",
+    "@semantic-release/git": "^9.0.0",
     "babel-jest": "^24.9.0",
     "eslint": "^6.5.1",
     "jest": "^24.9.0",
     "metro-react-native-babel-preset": "^0.58.0",
     "react-test-renderer": "16.11.0",
     "redux-devtools-extension": "^2.13.8",
-    "redux-logger": "^3.0.6"
+    "redux-logger": "^3.0.6",
+    "semantic-release": "^17.3.0"
   },
   "jest": {
     "preset": "react-native"
