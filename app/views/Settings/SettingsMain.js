@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, ScrollView } from 'react-native';
 
 import { connect } from 'react-redux';
-import { Button } from 'react-native-elements';
+import { Button, Divider } from 'react-native-elements';
 
 import SettingsItem from './SettingsItem';
 import SettingsRegion from './SettingsRegion';
@@ -129,6 +129,11 @@ const SearchSettingsScreen = props => {
         <CenteredButton
           onPress={() => restoreDefaults()}
           title="Восстановить по умолчанию"
+        />
+        <Divider style={{marginVertical: 15}}/>
+        <CenteredButton
+          onPress={() => navigation.navigate('SearchHistory')}
+          title="История поиска"
         />
       </ScrollView>
     </View>

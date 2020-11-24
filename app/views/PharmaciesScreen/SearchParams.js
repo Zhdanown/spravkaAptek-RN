@@ -38,6 +38,8 @@ function SearchParams(props) {
           {region && <Text>{region.name}</Text>}
           {!!town.id && <Text>{' > ' + town.name}</Text>}
           {!!district.id && <Text>{' > ' + district.name}</Text>}
+
+          {!(region || town.id || district.id) && <Text>Не определены</Text>}
         </Text>
       </View>
 
