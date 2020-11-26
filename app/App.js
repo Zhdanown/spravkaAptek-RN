@@ -5,14 +5,14 @@ import { SafeAreaView } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Provider } from 'react-redux';
-import { PersistGate } from "redux-persist/integration/react";
+import { PersistGate } from 'redux-persist/integration/react';
 import SplashScreen from 'react-native-splash-screen';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { store, persistor } from './modules/store';
 import HomeScreen from './views/HomeScreen';
 import PharmaciesScreen from './views/PharmaciesScreen';
-import ReferenceScreen from "./views/ReferenceScreen";
+import ReferenceScreen from './views/ReferenceScreen';
 import { COLORS } from './config';
 
 import ignoreWarnings from './config/ignoreWarnings';
@@ -22,7 +22,7 @@ const Tab = createBottomTabNavigator();
 function App() {
   useEffect(() => {
     SplashScreen.hide();
-  }, [])
+  }, []);
 
   return (
     <Provider store={store}>
@@ -37,8 +37,8 @@ function App() {
                   iconName = 'magnify';
                 } else if (route.name === 'Pharmacies') {
                   iconName = 'store';
-                } else if ("Reference") {
-                  iconName = 'book-open'
+                } else if ('Reference') {
+                  iconName = 'book-open';
                 }
 
                 return <Icon name={iconName} size={size} color={color} />;
@@ -71,19 +71,18 @@ function App() {
             />
           </Tab.Navigator>
         </NavigationContainer>
-        
       </PersistGate>
     </Provider>
   );
 }
 
 function withSafeAreaView(Component) {
-  return function (props) {
+  return function(props) {
     return (
       <SafeAreaView style={{ flex: 1 }}>
         <Component {...props} />
       </SafeAreaView>
-    )
+    );
   };
 }
 

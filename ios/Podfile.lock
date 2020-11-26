@@ -264,8 +264,8 @@ PODS:
     - React
   - react-native-maps (0.27.1):
     - React
-  - react-native-safe-area-context (1.0.2):
-    - React
+  - react-native-safe-area-context (3.1.9):
+    - React-Core
   - react-native-slider (3.0.0):
     - React
   - react-native-splash-screen (3.2.0):
@@ -551,7 +551,7 @@ SPEC CHECKSUMS:
   react-native-geolocation-service: 141e33bdb179bcba10b216ee13962611e21f2be4
   react-native-google-maps: 0a989abda71059db2caa98b9dacca7a8f38a47d0
   react-native-maps: f4b89da81626ad7f151a8bfcb79733295d31ce5c
-  react-native-safe-area-context: 5292aacb304803e215ff13fd7f01c3577909319f
+  react-native-safe-area-context: 86612d2c9a9e94e288319262d10b5f93f0b395f5
   react-native-slider: 05f11678260cb27c3d00a2dd1558b623be3ec8d2
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
   react-native-webview: 9c0e18449cd46f652f255a8ac5f911195127b8ca
