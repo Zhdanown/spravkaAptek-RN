@@ -24,7 +24,7 @@ export default function SearchHistory() {
 
   const onItemSelect = value => {
     dispatch(searchResults(value));
-    navigation.goBack();
+    navigation.navigate("Search");
   }
 
   return (
