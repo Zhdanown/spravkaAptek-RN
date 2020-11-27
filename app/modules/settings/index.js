@@ -119,12 +119,11 @@ export const loadDistricts = townId => async (dispatch, getState) => {
   } catch (error) {
     console.log(error)
   }
-
   // get already added districts
   let { districts } = getState().settings;
   // and add to them fetched ones
   response.data.forEach(district => {
-    if (!districts.find(x => x.id === townId)) {
+    if (!districts.find(x => x.id === district.id)) {
       districts.push(district) 
     }
   });
