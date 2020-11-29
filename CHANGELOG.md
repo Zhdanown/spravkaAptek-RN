@@ -1,3 +1,13 @@
+## [1.0.1](https://github.com/Zhdanown/spravkaAptek-RN/compare/v1.0.0...v1.0.1) (2020-11-29)
+
+
+### Bug Fixes
+
+* change filter param for districts ([49e7501](https://github.com/Zhdanown/spravkaAptek-RN/commit/49e7501cbb595cf00b2ecdc5c2e5490eaefaecf0))
+* minor changes ([5d9bab0](https://github.com/Zhdanown/spravkaAptek-RN/commit/5d9bab02297ca08297df1f640d557be1b07c55fb))
+* navigate to search from history ([2775305](https://github.com/Zhdanown/spravkaAptek-RN/commit/2775305f363380a9c8050f6a127983b9af23b2ea))
+* update react-native-safe-area-context ([23895b7](https://github.com/Zhdanown/spravkaAptek-RN/commit/23895b7bfcfda2604c3587d3e85a77d8a2333829))
+
 # 1.0.0 (2020-11-23)
 
 
