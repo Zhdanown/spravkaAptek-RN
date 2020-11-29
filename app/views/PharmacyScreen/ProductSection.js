@@ -4,13 +4,13 @@ import { View, Text, StyleSheet } from 'react-native';
 import { COLORS } from '../../config';
 
 export default function ProductSection({ product }) {
-  const { drugName, country, price, quantity } = product;
+  const { drugName, country, price, quantity, producer } = product;
 
   return (
-    <View
-      style={[styles.section, { borderColor: COLORS.PRIMARY, borderWidth: 1 }]}>
-      <Text style={{ fontSize: 16 }}>
-        {drugName} ({country})
+    <View style={[styles.section, styles.productSection]}>
+      <Text style={styles.drugName}>{drugName}</Text>
+      <Text style={{ textTransform: 'uppercase' }}>
+        ({country}) {producer}
       </Text>
       <View style={[styles.justified, { marginTop: 5 }]}>
         <Text style={styles.bold}>В наличии: {quantity}</Text>
@@ -31,6 +31,10 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     shadowOpacity: 0.5,
   },
+  productSection: {
+    borderColor: COLORS.PRIMARY,
+    borderWidth: 1,
+  },
   justified: {
     flexDirection: 'row',
     alignItems: 'flex-start',
@@ -38,5 +42,10 @@ const styles = StyleSheet.create({
   },
   bold: {
     fontWeight: 'bold',
+  },
+
+  drugName: {
+    fontWeight: '700',
+    fontSize: 18,
   },
 });

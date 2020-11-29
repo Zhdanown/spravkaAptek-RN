@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, ScrollView } from 'react-native';
 
 import { connect } from 'react-redux';
-import { Button } from 'react-native-elements';
+import { Button, Divider } from 'react-native-elements';
 
 import SettingsItem from './SettingsItem';
 import SettingsRegion from './SettingsRegion';
 import SettingsTown from './SettingsTown';
+import SettingsDistrict from './SettingsDistrict';
 import SettingsRange from './SettingsRange';
 import CenteredButton from '../../components/CenteredButton';
 import showAlertOnExit from './showAlertOnExit';
@@ -18,21 +19,35 @@ const SearchSettingsScreen = props => {
 
   const [region, setRegion] = useState(props.selectedRegion);
   const [town, setTown] = useState(props.selectedTown);
+  const [district, setDistrict] = useState(props.selectedDistrict);
   const [order, setOrder] = useState(props.selectedOrder);
   const [range, setRange] = useState(props.selectedRange);
 
+  const defaultTown = () => props.towns.find(x => !x.id);
+  const defaultDistrict = () => props.districts.find(x => !x.id);
+  const defaultOrder = () => props.orderOptions[0];
+
   useEffect(() => {
-    const unsubscribe = showAlertOnExit(navigation, region, town, order, range);
+    const unsubscribe = showAlertOnExit(
+      navigation,
+      region,
+      town,
+      district,
+      order,
+      range,
+    );
     return unsubscribe;
   });
 
   const restoreDefaults = () => {
-    setTown(props.towns[0]); // set 1st as default ('not selected')
-    setOrder(props.orderOptions[0]); // set 1st as default ('newest first')
+    setTown(defaultTown());
+    setDistrict(defaultDistrict());
+    setOrder(defaultOrder());
     setRange(0);
 
     props.applySettings({
       selectedTown: town,
+      selectedDistrict: district,
       selectedOrder: order,
       selectedRange: range,
     });
@@ -42,10 +57,28 @@ const SearchSettingsScreen = props => {
     props.applySettings({
       selectedRegion: region,
       selectedTown: town,
+      selectedDistrict: district,
       selectedOrder: order,
       selectedRange: range,
     });
     navigation.popToTop();
+  };
+
+  const onRegionChange = newRegion => {
+    setRegion(newRegion);
+    if (newRegion.id !== town.region) {
+      setTown(defaultTown());
+    }
+    if (district.id && newRegion.id !== district.town.region) {
+      setDistrict(defaultDistrict());
+    }
+  };
+
+  const onTownChange = newTown => {
+    setTown(newTown);
+    if (district.id && newTown.id !== district.town.id) {
+      setDistrict(defaultDistrict());
+    }
   };
 
   return (
@@ -54,14 +87,22 @@ const SearchSettingsScreen = props => {
         <SettingsRegion
           region={region}
           regions={props.regions}
-          setRegion={setRegion}
+          setRegion={onRegionChange}
+          loading={props.regionsPending}
         />
 
         <SettingsTown
           region={region}
           town={town}
           towns={props.towns}
-          setTown={setTown}
+          setTown={onTownChange}
+        />
+
+        <SettingsDistrict
+          town={town}
+          district={district}
+          districts={props.districts}
+          setDistrict={setDistrict}
         />
 
         <SettingsItem
@@ -71,10 +112,7 @@ const SearchSettingsScreen = props => {
           options={props.orderOptions}
         />
 
-        <SettingsRange
-          range={range}
-          setRange={setRange}
-        />
+        <SettingsRange range={range} setRange={setRange} />
 
         <View style={{ margin: 10 }}>
           <Button
@@ -91,6 +129,11 @@ const SearchSettingsScreen = props => {
         <CenteredButton
           onPress={() => restoreDefaults()}
           title="Восстановить по умолчанию"
+        />
+        <Divider style={{marginVertical: 15}}/>
+        <CenteredButton
+          onPress={() => navigation.navigate('SearchHistory')}
+          title="История поиска"
         />
       </ScrollView>
     </View>

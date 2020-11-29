@@ -1,11 +1,21 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 
 import SettingsItem from './SettingsItem';
 import HelperText from './HelperText';
+import { loadTowns } from '../../modules/settings';
 
 export default function SettingsTown(props) {
   const { region } = props;
   const { town, towns, setTown } = props;
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (region && !region.townsLoaded) {
+      dispatch(loadTowns(region.id));
+    }
+  }, [region]);
 
   function filterTownsByRegion(region) {
     return region

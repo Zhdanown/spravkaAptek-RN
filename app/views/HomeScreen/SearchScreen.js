@@ -57,6 +57,7 @@ function SearchScreen(props) {
               quantity: item.quantity,
               drugName: item.name,
               country: item.country,
+              producer: item.producer
             },
           })
         }

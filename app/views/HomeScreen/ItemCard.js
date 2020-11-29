@@ -49,12 +49,13 @@ function withDistance(Component) {
 }
 
 function ItemContent(props) {
-  const { name, add_date, country, quantity, price } = props;
+  const { name, add_date, country, quantity, price, producer } = props;
   const added = formatDate(add_date);
 
   return (
     <>
-      <Text style={styles.itemName}>{name + ` (${country})`}</Text>
+      <Text style={styles.itemName}>{name}</Text>
+      <Text style={styles.producer}>({country}) {producer}</Text>
       {props.render()}
       <Text style={styles.addDate}>{added}</Text>
       <View style={[styles.justified, styles.quantityPrice]}>
@@ -78,7 +79,10 @@ const styles = StyleSheet.create({
   itemName: {
     fontSize: 16,
     fontWeight: '900',
+  },
+  producer: {
     marginBottom: 10,
+    textTransform: 'uppercase',
   },
   quantityPrice: {
     marginTop: 10,

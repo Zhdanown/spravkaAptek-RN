@@ -126,19 +126,19 @@ export const searchResults = value => async (dispatch, getState) => {
 
   function withParams() {
     const state = getState();
-    const { selectedRegion: region, selectedTown: town } = state.settings;
+    const { selectedRegion: region, selectedTown: town, selectedDistrict: district } = state.settings;
     const { selectedOrder } = state.settings;
 
     let params = {
       page: 1,
       price_list__pharmacy__town: (town && town.id) || '',
       price_list__pharmacy__town__region: (region && region.id) || '',
+      price_list__pharmacy__town_district: (district && district.id) || '',
       order_type: selectedOrder.value,
     };
 
     params = withPharmParams(params);
     params = withRangeParams(params);
-
     return params;
 
     function withPharmParams(params) {

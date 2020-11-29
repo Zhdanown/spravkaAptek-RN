@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, SectionList } from 'react-native';
 
 import { useSelector, useDispatch } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
 
 import splitByDays from './splitByDays';
 import HistoryItem from './HistoryItem';
@@ -16,9 +17,15 @@ import { COLORS } from '../../../config';
 
 export default function SearchHistory() {
   const dispatch = useDispatch();
+  const navigation = useNavigation();
   const searchHistory = useSelector(state => state.search.history);
 
-  const data = splitByDays(searchHistory)
+  const data = splitByDays(searchHistory);
+
+  const onItemSelect = value => {
+    dispatch(searchResults(value));
+    navigation.navigate("Search");
+  }
 
   return (
     <View style={{ margin: 10, flex: 1 }}>
@@ -35,7 +42,7 @@ export default function SearchHistory() {
         renderItem={({ item }) => (
           <HistoryItem
             item={item}
-            onPress={() => dispatch(searchResults(value))}
+            onPress={onItemSelect}
             onDelete={item => dispatch(removeHistoryItem(item))}
           />
         )}
