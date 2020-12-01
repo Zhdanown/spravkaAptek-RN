@@ -130,7 +130,7 @@ const SearchSettingsScreen = props => {
           onPress={() => restoreDefaults()}
           title="Восстановить по умолчанию"
         />
-        <Divider style={{marginVertical: 15}}/>
+        <Divider style={{marginVertical: 15, marginHorizontal: 10}}/>
         <CenteredButton
           onPress={() => navigation.navigate('SearchHistory')}
           title="История поиска"
