@@ -1,7 +1,7 @@
 import { Linking, Alert } from 'react-native';
 
 export const getRoute = coordinates => {
-  if (!coordinates) Alert('Неверные координаты');
+  if (!coordinates) Alert.alert('Неверные координаты');
   const { latitude, longitude } = coordinates;
   const scheme = Platform.select({ ios: 'maps:0,0?q=', android: 'geo:0,0?q=' });
   const latLng = `${latitude},${longitude}`;
@@ -14,7 +14,7 @@ export const getRoute = coordinates => {
   Linking.canOpenURL(url)
     .then(supported => {
       if (!supported) {
-        Alert.alert('maps is not available');
+        Alert.alert('Недоступно');
       } else {
         return Linking.openURL(url);
       }
