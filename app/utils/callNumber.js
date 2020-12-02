@@ -6,7 +6,7 @@ export const callNumber = phone => {
   Linking.canOpenURL(phoneNumber)
     .then(supported => {
       if (!supported) {
-        Alert.alert('Phone number is not available');
+        Alert.alert('Недоступно');
       } else {
         return Linking.openURL(phoneNumber);
       }

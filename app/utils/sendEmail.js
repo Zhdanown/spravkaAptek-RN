@@ -7,7 +7,7 @@ export const sendEmail = email => {
   Linking.canOpenURL(emailAddress)
     .then(supported => {
       if (!supported) {
-        Alert.alert('Email is not available');
+        Alert.alert('Недоступно');
       } else {
         return Linking.openURL(emailAddress);
       }

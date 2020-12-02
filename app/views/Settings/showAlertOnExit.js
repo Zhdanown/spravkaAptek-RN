@@ -10,7 +10,7 @@ export default (navigation, region, town, district, order, range) =>
     e.preventDefault();
 
     Alert.alert(
-      'Несохранённые изменения',
+      'Внимание',
       'Несохранённые изменения будут потеряны. Закрыть окно настроек?',
       [
         { text: 'Отмена', style: 'cancel', onPress: () => {} },
