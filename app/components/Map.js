@@ -55,7 +55,11 @@ export default ({ pharmCoordinates, userLocation }) => {
         flexDirection: 'row',
       }}>
       <ButtonGroup>
-        <MapButton iconName="my-location" onPress={fitWithUserLocation} />
+        <MapButton
+          iconName="my-location"
+          onPress={fitWithUserLocation}
+          disabled={!userLocation}
+        />
         <MapButton iconName="add-location" onPress={fitToPharm} />
       </ButtonGroup>
     </View>
@@ -104,7 +108,7 @@ function ButtonGroup(props) {
   );
 }
 
-function MapButton({ onPress, iconName }) {
+function MapButton({ onPress, iconName, disabled }) {
   return (
     <IconButton
       style={{
@@ -112,8 +116,10 @@ function MapButton({ onPress, iconName }) {
         height: 50,
         width: 50,
         justifyContent: 'center',
+        ...(disabled && { opacity: 0.5 }),
       }}
-      onPress={onPress}>
+      onPress={onPress}
+      disabled={disabled}>
       <MIcon name={iconName} size={36} color={COLORS.PRIMARY} />
     </IconButton>
   );
