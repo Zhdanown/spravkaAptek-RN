@@ -23,7 +23,9 @@ export default function SettingsRange(props) {
   return (
     <SettingsItem
       title="Радиус поиска"
-      selectedValue={location ? range + 'км' || 'Не важно' : 'Не доступно'}>
+      selectedValue={
+        location ? (range && range + ' км') || 'Не учитывать' : 'Не доступно'
+      }>
       {location ? (
         <Slider
           style={{ marginTop: 10 }}
