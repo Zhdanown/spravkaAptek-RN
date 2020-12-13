@@ -1,7 +1,7 @@
 import 'react-native-gesture-handler';
 import React, { useEffect } from 'react';
 
-import { SafeAreaView } from 'react-native';
+import { SafeAreaView, StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Provider } from 'react-redux';
@@ -27,63 +27,56 @@ function App() {
   return (
     <Provider store={store}>
       <PersistGate persistor={persistor}>
-        <NavigationContainer>
-          <Tab.Navigator
-            screenOptions={({ route }) => ({
-              tabBarIcon: ({ focused, color, size }) => {
-                let iconName;
+        <StatusBar barStyle="dark-content"/>
+        <SafeAreaView style={{ flex: 1, color: 'black' }}>
+          <NavigationContainer>
+            <Tab.Navigator
+              screenOptions={({ route }) => ({
+                tabBarIcon: ({ focused, color, size }) => {
+                  let iconName;
 
-                if (route.name === 'Home') {
-                  iconName = 'magnify';
-                } else if (route.name === 'Pharmacies') {
-                  iconName = 'store';
-                } else if ('Reference') {
-                  iconName = 'book-open';
-                }
+                  if (route.name === 'Home') {
+                    iconName = 'magnify';
+                  } else if (route.name === 'Pharmacies') {
+                    iconName = 'store';
+                  } else if ('Reference') {
+                    iconName = 'book-open';
+                  }
 
-                return <Icon name={iconName} size={size} color={color} />;
-              },
-            })}
-            tabBarOptions={{
-              activeTintColor: COLORS.PRIMARY,
-              inactiveTintColor: 'gray',
-            }}>
-            <Tab.Screen
-              name="Home"
-              component={HomeScreen}
-              options={{
-                title: 'Поиск',
-              }}
-            />
-            <Tab.Screen
-              name="Pharmacies"
-              component={PharmaciesScreen}
-              options={{
-                title: 'Аптеки',
-              }}
-            />
-            <Tab.Screen
-              name="Reference"
-              component={ReferenceScreen}
-              options={{
-                title: 'Справочник',
-              }}
-            />
-          </Tab.Navigator>
-        </NavigationContainer>
+                  return <Icon name={iconName} size={size} color={color} />;
+                },
+              })}
+              tabBarOptions={{
+                activeTintColor: COLORS.PRIMARY,
+                inactiveTintColor: 'gray',
+              }}>
+              <Tab.Screen
+                name="Home"
+                component={HomeScreen}
+                options={{
+                  title: 'Поиск',
+                }}
+              />
+              <Tab.Screen
+                name="Pharmacies"
+                component={PharmaciesScreen}
+                options={{
+                  title: 'Аптеки',
+                }}
+              />
+              <Tab.Screen
+                name="Reference"
+                component={ReferenceScreen}
+                options={{
+                  title: 'Справочник',
+                }}
+              />
+            </Tab.Navigator>
+          </NavigationContainer>
+        </SafeAreaView>
       </PersistGate>
     </Provider>
   );
 }
 
-function withSafeAreaView(Component) {
-  return function(props) {
-    return (
-      <SafeAreaView style={{ flex: 1 }}>
-        <Component {...props} />
-      </SafeAreaView>
-    );
-  };
-}
-
-export default withSafeAreaView(App);
+export default App;
