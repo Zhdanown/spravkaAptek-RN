@@ -9,6 +9,7 @@ import SearchHistory from './history/SearchHistory';
 import { getLocation } from '../../modules/location';
 import SettingsMain from '../Settings/SettingsMain';
 import SettingsItemOptions from '../Settings/SettingsItemOptions';
+import { Alert } from 'react-native';
 
 const Stack = createStackNavigator();
 
@@ -19,7 +20,8 @@ function HomeScreen(props) {
 
   React.useEffect(() => {
     if (props.locationError) {
-      alert(
+      Alert.alert(
+        "Внимание",
         'Не удалось определить местоположение. Некоторые функции будут недоступны',
       );
     }

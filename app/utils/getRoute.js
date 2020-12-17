@@ -14,7 +14,7 @@ export const getRoute = coordinates => {
   Linking.canOpenURL(url)
     .then(supported => {
       if (!supported) {
-        Alert.alert('Недоступно');
+        Alert.alert('Ошибка','Не удалось открыть ссылку');
       } else {
         return Linking.openURL(url);
       }
