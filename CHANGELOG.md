@@ -1,3 +1,15 @@
+## [1.0.2](https://github.com/Zhdanown/spravkaAptek-RN/compare/v1.0.1...v1.0.2) (2021-03-18)
+
+
+### Bug Fixes
+
+* add hor margin to divider in settings ([f6d1c73](https://github.com/Zhdanown/spravkaAptek-RN/commit/f6d1c73791fc2eb6f5c43e67266634d71b4988ec))
+* add StatusBar ([91f86c7](https://github.com/Zhdanown/spravkaAptek-RN/commit/91f86c76e39594ae9eb92367f6f8a32a7d9f6a02))
+* change alert messages when opening links ([11f2c0b](https://github.com/Zhdanown/spravkaAptek-RN/commit/11f2c0ba0feea6d5097709a2698eebf9f2ec4916))
+* disable 'user location' btn if location is undefined ([b5f5af8](https://github.com/Zhdanown/spravkaAptek-RN/commit/b5f5af8e57385cd145ec0b59e28dd3e393dba3e6))
+* localise alerts ([27b9015](https://github.com/Zhdanown/spravkaAptek-RN/commit/27b901566f214b1ad8dc0db31a58e69488147851))
+* show 'ignore' label when search radius is 0 ([634c0d3](https://github.com/Zhdanown/spravkaAptek-RN/commit/634c0d37391e99959daf4d7ae3902ca18ee773a5))
+
 ## [1.0.1](https://github.com/Zhdanown/spravkaAptek-RN/compare/v1.0.0...v1.0.1) (2020-11-29)
 
 
